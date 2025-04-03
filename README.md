@@ -26,3 +26,7 @@ This is a web or mobile app that helps users find safe zones, hospitals, and eme
 - Life-saving potential – People in disaster-prone areas can use it in real-time.
 - Highly relevant – Governments, NGOs, and citizens can benefit.
 - Strong innovation factor – Combines geolocation + real-time disaster tracking.
+
+API's :
+1. NASA - https://api.nasa.gov/
+2. ReliefWeb - https://reliefweb.int/help/api
