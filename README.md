@@ -30,3 +30,6 @@ This is a web or mobile app that helps users find safe zones, hospitals, and eme
 API's :
 1. NASA - https://api.nasa.gov/
 2. ReliefWeb - https://reliefweb.int/help/api
+3. OpenStreetMap - https://wiki.openstreetmap.org/wiki/API_v0.6
+4. https://photon.komoot.io/
+5. https://www.here.com/developer/rest-apis
