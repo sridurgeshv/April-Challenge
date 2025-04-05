@@ -29,6 +29,8 @@ This is a web or mobile app that helps users find safe zones, hospitals, and eme
 
 API's :
 1. NASA - https://api.nasa.gov/
+- [Link 1](https://worldview.earthdata.nasa.gov/?v=72.90204749683377,19.086367401115417,73.09423884362047,19.17175059691467&l=Reference_Labels_15m,Reference_Features_15m,Coastlines_15m,HLS_L30_Nadir_BRDF_Adjusted_Reflectance,Land_Water_Map&lg=true&l1=Reference_Labels_15m,Reference_Features_15m,Coastlines_15m,MODIS_Aqua_Cloud_Top_Pressure_Day&lg1=true&ca=false&cv=46&s=79.4433,23.3794&t=2023-04-30-T00%3A00%3A00Z&t1=2025-04-04-T05%3A56%3A43Z)
+- [EONET}(https://eonet.gsfc.nasa.gov/docs/v2.1)
 2. ReliefWeb - https://reliefweb.int/help/api
 3. OpenStreetMap - https://wiki.openstreetmap.org/wiki/API_v0.6
 4. https://photon.komoot.io/
