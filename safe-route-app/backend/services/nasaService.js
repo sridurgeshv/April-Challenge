@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const NASA_API_KEY = process.env.NASA_API_KEY || 'MDYIkX0sDzdu3p2SBIunpVYWTx7MId8wPUY4EWb9'; // NASA provides a demo key
+const NASA_API_KEY = process.env.NASA_API_KEY || 'q8im2tVzRxHQlqvcCDul5w2kvUozSxhSwctV2jCH'; // NASA provides a demo key
 const EONET_BASE_URL = 'https://eonet.gsfc.nasa.gov/api/v3';
 
 const getActiveDisasters = async (params = {}) => {
