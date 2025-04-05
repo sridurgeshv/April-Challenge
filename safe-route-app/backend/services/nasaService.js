@@ -1,61 +1,42 @@
 const axios = require('axios');
 
-const NASA_API_KEY = process.env.NASA_API_KEY;
+const NASA_API_KEY = process.env.NASA_API_KEY || 'MDYIkX0sDzdu3p2SBIunpVYWTx7MId8wPUY4EWb9'; // NASA provides a demo key
 const EONET_BASE_URL = 'https://eonet.gsfc.nasa.gov/api/v3';
 
-/**
- * Get active disasters from NASA EONET API
- * @param {Object} params - Query parameters
- * @param {Number} params.days - Number of days to look back
- * @param {String} params.status - Event status (open, closed)
- * @param {Array} params.categories - Event categories to filter
- * @returns {Promise} Promise with disaster data
- */
 const getActiveDisasters = async (params = {}) => {
   try {
-    const { days = 20, status = 'open', categories = [] } = params;
+    const { days = 20, status = 'open', category } = params;
     
     let url = `${EONET_BASE_URL}/events`;
-    
-    // Build query parameters
     const queryParams = new URLSearchParams();
+    
     queryParams.append('days', days);
     queryParams.append('status', status);
     
-    if (categories.length > 0) {
-      queryParams.append('categories', categories.join(','));
+    if (category) {
+      queryParams.append('category', category);
     }
     
     if (NASA_API_KEY) {
       queryParams.append('api_key', NASA_API_KEY);
     }
     
-    url = `${url}?${queryParams.toString()}`;
-    
-    const response = await axios.get(url);
+    const response = await axios.get(`${url}?${queryParams.toString()}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching disasters from NASA EONET:', error);
-    throw error;
+    console.error('NASA API Error:', error.message);
+    throw new Error('Failed to fetch disaster data from NASA');
   }
 };
 
-/**
- * Get disaster categories from NASA EONET API
- * @returns {Promise} Promise with categories data
- */
 const getDisasterCategories = async () => {
   try {
-    const url = `${EONET_BASE_URL}/categories`;
-    const response = await axios.get(url);
+    const response = await axios.get(`${EONET_BASE_URL}/categories`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching disaster categories:', error);
-    throw error;
+    console.error('NASA API Error:', error.message);
+    throw new Error('Failed to fetch disaster categories');
   }
 };
 
-module.exports = {
-  getActiveDisasters,
-  getDisasterCategories
-};
+module.exports = { getActiveDisasters, getDisasterCategories };
