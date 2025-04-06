@@ -1,31 +1,38 @@
-// src/services/disasterService.js
 import axios from 'axios';
 
-// Point to your backend API, not directly to NASA
 const API_BASE_URL = process.env.REACT_APP_API_URL || 
   `${window.location.protocol}//${window.location.hostname}:5000/api`;
 
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 10000
+});
+
 export const fetchDisasters = async (params = {}) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/disasters`, { 
-      params,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    return response.data;
-  } catch (error) {
-    console.error('API Error:', error);
-    throw new Error(error.response?.data?.error || 'Failed to fetch disasters');
-  }
-};
+    // Validate required params
+    if (params.lat && params.lng && !params.radius) {
+      params.radius = 500; // Default 500km radius
+    }
 
-export const fetchCategories = async () => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/categories`);
-    return response.data;
+    const response = await api.get('/disasters', { params });
+    
+    if (!response.data.success) {
+      throw new Error(response.data.error || 'Invalid response from server');
+    }
+
+    return response.data.data;
   } catch (error) {
-    console.error('API Error:', error);
-    throw new Error(error.response?.data?.error || 'Failed to fetch categories');
+    console.error('API Request Failed:', {
+      url: error.config?.url,
+      params: error.config?.params,
+      response: error.response?.data
+    });
+    
+    throw new Error(
+      error.response?.data?.error || 
+      error.message || 
+      'Failed to fetch disaster data'
+    );
   }
 };

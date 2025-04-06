@@ -1,47 +1,59 @@
 const nasaService = require('../services/nasaService');
 
-/**
- * Get active disasters
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @param {Function} next - Express next middleware function
- */
 const getDisasters = async (req, res, next) => {
   try {
-    const { days, status, categories } = req.query;
+    const { days, status, category, lat, lng, radius } = req.query;
     
+    // Validate parameters
     const params = {
-      days: days ? parseInt(days) : 20,
-      status: status || 'open'
+      days: days && !isNaN(days) ? parseInt(days) : 30,
+      status: status || 'open',
+      category,
+      ...(lat && lng && radius && { 
+        lat: parseFloat(lat),
+        lng: parseFloat(lng),
+        radius: parseFloat(radius)
+      })
     };
-    
-    if (categories) {
-      params.categories = categories.split(',');
+
+    // Add bbox if available (for direct bbox queries)
+    if (req.query.bbox) {
+      params.bbox = Array.isArray(req.query.bbox) ? 
+        req.query.bbox.map(Number) : 
+        req.query.bbox.split(',').map(Number);
     }
+
+    const data = await nasaService.getActiveDisasters(params);
     
-    const disasters = await nasaService.getActiveDisasters(params);
-    res.json(disasters);
+    res.json({
+      success: true,
+      data,
+      metadata: {
+        count: data.events.length,
+        radius: radius ? `${radius}km` : 'global',
+        lastUpdated: data.lastUpdated
+      }
+    });
   } catch (error) {
-    next(error);
+    console.error('Controller Error:', error.message);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      details: 'Failed to process disaster data'
+    });
   }
 };
 
-/**
- * Get disaster categories
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @param {Function} next - Express next middleware function
- */
 const getCategories = async (req, res, next) => {
   try {
     const categories = await nasaService.getDisasterCategories();
-    res.json(categories);
+    res.json({ success: true, data: categories });
   } catch (error) {
-    next(error);
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    });
   }
 };
 
-module.exports = {
-  getDisasters,
-  getCategories
-};
+module.exports = { getDisasters, getCategories };
