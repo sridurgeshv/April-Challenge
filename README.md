@@ -93,7 +93,7 @@ An emergency application that helps users find safe zones, hospitals, and emerge
    ```bash
    cd backend
    npm install
-   npm start
+   node server.js
    ```
 
 ## API Registration
