@@ -33,6 +33,8 @@ app.use('/api/disasters', require('./routes/disasters'));
 // app.use('/api/safezones', require('./routes/safeZones'));
 // app.use('/api/routes', require('./routes/routes'));
 
+app.use('/api/register', require('./routes/register'));
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);

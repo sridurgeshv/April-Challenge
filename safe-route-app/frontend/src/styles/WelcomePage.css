@@ -1,0 +1,107 @@
+.welcome-page {
+  position: relative;
+  height: 100vh;
+  background: linear-gradient(to right, #2b5876, #4e4376);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.welcome-content {
+  text-align: center;
+  z-index: 1;
+}
+
+.welcome-content h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.welcome-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.welcome-content button {
+  padding: 0.8rem 1.8rem;
+  font-size: 1rem;
+  background-color: #ff9a00;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.welcome-content button:hover {
+  background-color: #e07b00;
+}
+
+.register-panel {
+  position: absolute;
+  top: 50%;
+  left: -300px;
+  transform: translate(-50%, -50%);
+  width: 360px;
+  background: white;
+  color: #333;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+  transition: left 0.6s ease-in-out;
+  z-index: 2;
+}
+
+.register-panel.slide-in {
+  left: 50%;
+}
+
+.register-form input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.register-form button {
+  width: 50%;
+  padding: 0.7rem;
+  background-color: #fff;
+  color: black;
+  border: 1px grey solid;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.register-form button:hover {
+  background-color: black;
+  color: white;
+}
+
+.msg {
+  margin-top: 1rem;
+  font-weight: bold;
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+/* ✨ New Close Button Styling */
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.close-btn:hover {
+  color: #333;
+}
