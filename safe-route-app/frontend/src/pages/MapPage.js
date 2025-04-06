@@ -4,6 +4,7 @@ import L from 'leaflet';
 import { fetchDisasters } from '../services/disasterService';
 import { getCurrentLocation } from '../services/locationService';
 import 'leaflet/dist/leaflet.css';
+import '../styles/MapPage.css'; 
 
 const MapPage = () => {
   const [userLocation, setUserLocation] = useState(null);
@@ -56,40 +57,37 @@ const MapPage = () => {
 
   return (
     <div className="map-page">
-      <h2>Disaster Map</h2>
-      <div className="map-container">
-        <MapContainer 
-          center={[userLocation.lat, userLocation.lng]} 
-          zoom={8} 
-          style={{ height: '100%', width: '100%' }}
-        >
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          />
-          
-          <Marker position={[userLocation.lat, userLocation.lng]}>
-            <Popup>Your Location</Popup>
+      <MapContainer 
+        center={[userLocation.lat, userLocation.lng]} 
+        zoom={8} 
+        className="full-screen-map"
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        
+        <Marker position={[userLocation.lat, userLocation.lng]}>
+          <Popup>Your Location</Popup>
+        </Marker>
+        
+        {disasters.map((disaster) => (
+          <Marker
+            key={disaster.id}
+            position={[disaster.geometry[0].coordinates[1], disaster.geometry[0].coordinates[0]]}
+            icon={getDisasterIcon(disaster.categories[0].id)}
+          >
+            <Popup>
+              <h3>{disaster.title}</h3>
+              <p>Type: {disaster.categories[0].title}</p>
+              <p>Date: {new Date(disaster.geometry[0].date).toLocaleString()}</p>
+              <a href={disaster.sources[0].url} target="_blank" rel="noopener noreferrer">
+                More info
+              </a>
+            </Popup>
           </Marker>
-          
-          {disasters.map((disaster) => (
-            <Marker
-              key={disaster.id}
-              position={[disaster.geometry[0].coordinates[1], disaster.geometry[0].coordinates[0]]}
-              icon={getDisasterIcon(disaster.categories[0].id)}
-            >
-              <Popup>
-                <h3>{disaster.title}</h3>
-                <p>Type: {disaster.categories[0].title}</p>
-                <p>Date: {new Date(disaster.geometry[0].date).toLocaleString()}</p>
-                <a href={disaster.sources[0].url} target="_blank" rel="noopener noreferrer">
-                  More info
-                </a>
-              </Popup>
-            </Marker>
-          ))}
-        </MapContainer>
-      </div>
+        ))}
+      </MapContainer>
     </div>
   );
 };
