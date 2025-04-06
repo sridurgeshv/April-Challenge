@@ -1,0 +1,109 @@
+.emergency-page {
+    min-height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                url('https://images.unsplash.com/photo-1603727709827-f11bd9dcd49f') no-repeat center center/cover;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+    animation: fadeIn 1s ease-in;
+  }
+  
+  h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    animation: slideInTop 0.7s ease-out;
+  }
+  
+  .emergency-form {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 500px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    animation: zoomIn 0.8s ease-out;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+  
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+  }
+  
+  textarea {
+    min-height: 100px;
+  }
+  
+  .emergency-button {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1.1rem;
+    background-color: #e60023;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .emergency-button:hover {
+    background-color: #cc001f;
+  }
+  
+  .emergency-contacts {
+    margin-top: 3rem;
+    text-align: center;
+    animation: fadeIn 1.5s ease-in;
+  }
+  
+  .emergency-contacts h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  
+  .emergency-contacts ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .emergency-contacts li {
+    font-size: 1.1rem;
+    margin: 0.3rem 0;
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  
+  @keyframes slideInTop {
+    from { transform: translateY(-20px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+  
+  @keyframes zoomIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+  

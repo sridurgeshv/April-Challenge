@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import '../styles/EmergencyPage.css';
 
 const EmergencyPage = () => {
   const [emergencyType, setEmergencyType] = useState('');

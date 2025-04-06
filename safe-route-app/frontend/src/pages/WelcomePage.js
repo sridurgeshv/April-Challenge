@@ -1,4 +1,6 @@
+// WelcomePage.js
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/WelcomePage.css';
 
 const WelcomePage = () => {
@@ -7,6 +9,7 @@ const WelcomePage = () => {
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleSendOTP = async (e) => {
     e.preventDefault();
@@ -46,7 +49,12 @@ const WelcomePage = () => {
       });
 
       const data = await response.json();
-      setMessage(data.message);
+      if (response.ok) {
+        setMessage(data.message);
+        setTimeout(() => navigate('/home'), 1000);
+      } else {
+        setMessage(data.message);
+      }
     } catch (error) {
       console.error(error);
       setMessage('Error verifying OTP');
