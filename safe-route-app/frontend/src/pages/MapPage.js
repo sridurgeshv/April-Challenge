@@ -4,7 +4,7 @@ import L from 'leaflet';
 import { fetchDisasters } from '../services/disasterService';
 import { getCurrentLocation } from '../services/locationService';
 import 'leaflet/dist/leaflet.css';
-import './MapPage.css';
+import '../styles/MapPage.css';
 
 const MapPage = () => {
   const [userLocation, setUserLocation] = useState(null);
