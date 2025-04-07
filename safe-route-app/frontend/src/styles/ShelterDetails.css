@@ -1,0 +1,46 @@
+/* Container for the shelter details */
+.shelter-details {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 400px; /* Limits width for readability */
+    margin: 20px auto; /* Centers the card and adds spacing */
+  }
+  
+  /* Shelter name styling */
+  .shelter-details h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    word-wrap: break-word; /* Ensures long names wrap properly */
+  }
+  
+  /* General paragraph styling */
+  .shelter-details p {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  
+  /* Coordinates styling (less prominent) */
+  .shelter-details p.coordinates {
+    font-size: 14px;
+    color: #666; /* Lighter color to de-emphasize */
+  }
+  
+  /* "Get Directions" button styling */
+  .directions-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff; /* Blue background for visibility */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease; /* Smooth hover transition */
+  }
+  
+  /* Hover effect for the button */
+  .directions-btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }

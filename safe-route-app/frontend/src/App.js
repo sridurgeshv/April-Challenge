@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage';
 import MapPage from './pages/MapPage';
 import ProfilePage from './pages/ProfilePage';
 import EmergencyPage from './pages/EmergencyPage';
+import ShelterDetails from './pages/ShelterDetails';
 import './App.css';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/map" element={<MapPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/emergency" element={<EmergencyPage />} />
+          <Route path="/shelter/:id" element={<ShelterDetails />} />
         </Routes>
       </div>
     </Router>
