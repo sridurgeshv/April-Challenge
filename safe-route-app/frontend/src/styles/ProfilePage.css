@@ -1,0 +1,150 @@
+.profile-wrapper {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .profile-header-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 15px;
+    position: relative;
+  }
+  
+  .profile-header-container h1 {
+    width: 100%;
+    text-align: center;
+    margin: 0;
+  }
+  
+  .nav-back-button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #1976d2;
+    padding: 8px 12px;
+    position: absolute;
+    left: 0;
+  }
+  
+  .nav-back-button:hover {
+    text-decoration: underline;
+  }
+  
+  .profile-content-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+  
+  .profile-box {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 25px;
+    margin-bottom: 25px;
+  }
+  
+  .account-box {
+    grid-column: 1;
+  }
+  
+  .emergency-box {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  
+  .preferences-box {
+    grid-column: 1;
+  }
+  
+  .profile-box h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    color: #333;
+  }
+  
+  .account-field {
+    margin-bottom: 15px;
+  }
+  
+  .account-field label {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+  }
+  
+  .field-content {
+    font-size: 16px;
+    color: #333;
+    padding: 8px 0;
+  }
+  
+  .account-edit-btn {
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 10px;
+  }
+  
+  .account-edit-btn:hover {
+    background-color: #1565c0;
+  }
+  
+  .preference-row {
+    margin-bottom: 15px;
+  }
+  
+  .preference-row label {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+  }
+  
+  .preference-row input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  
+  .preference-row select {
+    margin-top: 5px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    width: 100%;
+  }
+  
+  @media (max-width: 768px) {
+    .profile-content-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .account-box,
+    .emergency-box,
+    .preferences-box {
+      grid-column: 1;
+    }
+    
+    .emergency-box {
+      grid-row: auto;
+    }
+  }
+  
+  .profile-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 18px;
+    color: #666;
+  }

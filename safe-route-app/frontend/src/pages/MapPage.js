@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import L from 'leaflet';
 import { fetchDisasters } from '../services/disasterService';
@@ -15,6 +15,8 @@ const MapPage = () => {
   const [showLocationDetails, setShowLocationDetails] = useState(false);
   const [shelters, setShelters] = useState([]);
   const [showGlobalDisasters, setShowGlobalDisasters] = useState(true);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -51,6 +53,18 @@ const MapPage = () => {
     };
 
     loadData();
+    
+    // Close dropdown when clicking outside
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowProfileDropdown(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   const getNearbyShelters = (lat, lng) => {
@@ -118,6 +132,20 @@ const MapPage = () => {
   const toggleLocationDetails = () => {
     setShowLocationDetails(!showLocationDetails);
   };
+  
+  const toggleProfileDropdown = () => {
+    setShowProfileDropdown(!showProfileDropdown);
+  };
+  
+  const handleProfileClick = () => {
+    // Navigate to profile page
+    window.location.href = '/profile';
+  };
+  
+  const handleLogoutClick = () => {
+    // Navigate to home page
+    window.location.href = '/';
+  };
 
   if (loading) return <div className="loading">Loading safety data...</div>;
   if (error) return <div className="error">Error: {error}</div>;
@@ -128,7 +156,20 @@ const MapPage = () => {
   return (
     <div className="map-page">
       <div className="map-header">
-        <h2>Disaster Safety Map</h2>
+        <div className="header-container">
+          <h2>Disaster Safety Map</h2>
+          <div className="profile-container" ref={dropdownRef}>
+            <div className="profile-icon" onClick={toggleProfileDropdown}>
+              <span className="profile-icon-inner">👤</span>
+            </div>
+            {showProfileDropdown && (
+              <div className="profile-dropdown">
+                <button onClick={handleProfileClick}>Profile</button>
+                <button onClick={handleLogoutClick}>Log out</button>
+              </div>
+            )}
+          </div>
+        </div>
         <div className={`safety-status ${hasLocalDisasters ? 'danger' : 'safe'}`}>
           {hasLocalDisasters ? (
             <span>⚠️ {localDisasters.length} active threats nearby</span>
