@@ -71,9 +71,6 @@ This application requires API keys from:
 2. MapBox (optional) - Register at https://www.mapbox.com/
 
 
-# SafeRoute: Disaster Response & Evacuation Assistant
-
-
 ### Tech Stack & APIs:
 1. APIs:
 - OpenStreetMap (for geolocation & navigation).
