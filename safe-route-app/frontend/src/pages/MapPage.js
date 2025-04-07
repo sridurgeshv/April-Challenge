@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
 import { fetchDisasters } from '../services/disasterService';
 import { getCurrentLocation } from '../services/locationService';
@@ -17,6 +19,43 @@ const MapPage = () => {
   const [showGlobalDisasters, setShowGlobalDisasters] = useState(true);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
+  const [showPreparednessTips, setShowPreparednessTips] = useState(false);
+
+  const calculateBoundingBox = (lat, lng, radiusKm) => {
+    const earthRadius = 6371;
+    const deltaLat = (radiusKm / earthRadius) * (180 / Math.PI);
+    const deltaLng = (radiusKm / (earthRadius * Math.cos(Math.PI * lat / 180))) * (180 / Math.PI);
+    return [lat - deltaLat, lng - deltaLng, lat + deltaLat, lng + deltaLng].join(',');
+  };
+
+  const fetchShelters = async (lat, lng, radiusKm) => {
+    const bbox = calculateBoundingBox(lat, lng, radiusKm);
+    const query = `
+      [out:json];
+      (
+        node["amenity"="hospital"](${bbox});
+        node["amenity"="shelter"](${bbox});
+        node["amenity"="fire_station"](${bbox});
+      );
+      out center;
+    `;
+    const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      return data.elements.map(el => ({
+        id: el.id,
+        name: el.tags.name || 'Unknown',
+        type: el.tags.amenity,
+        lat: el.lat,
+        lng: el.lon
+      }));
+    } catch (error) {
+      console.error('Error fetching shelters:', error);
+      return [];
+    }
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -24,114 +63,56 @@ const MapPage = () => {
         const location = await getCurrentLocation();
         setUserLocation(location);
 
-        // Fetch local disasters (500km radius)
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
         const localData = await fetchDisasters({
-          days: 30,
+          days: 7,
           status: 'open',
           lat: location.lat,
           lng: location.lng,
           radius: 500
         });
-        setLocalDisasters(localData.events || []);
+        const filteredLocalDisasters = localData.events.filter(event =>
+          new Date(event.geometry[0].date) >= sevenDaysAgo
+        );
+        setLocalDisasters(filteredLocalDisasters);
 
-        // Fetch global disasters (no location filter)
         const globalData = await fetchDisasters({
-          days: 30,
+          days: 7,
           status: 'open',
-          limit: 50 // Limit to 50 most recent global disasters
+          limit: 50
         });
-        setGlobalDisasters(globalData.events || []);
+        const filteredGlobalDisasters = globalData.events.filter(event =>
+          new Date(event.geometry[0].date) >= sevenDaysAgo
+        );
+        setGlobalDisasters(filteredGlobalDisasters);
 
-        // Mock shelter data
-        setShelters(getNearbyShelters(location.lat, location.lng));
-        
+        const realShelters = await fetchShelters(location.lat, location.lng, 50);
+        setShelters(realShelters);
+
         setLoading(false);
       } catch (err) {
         setError(err.message);
         setLoading(false);
       }
     };
-
     loadData();
+  }, []);
     
     // Close dropdown when clicking outside
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowProfileDropdown(false);
-      }
-    };
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+          setShowProfileDropdown(false);
+        }
+      };
     
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  const getNearbyShelters = (lat, lng) => {
-    // In a real app, this would be an API call
-    return [
-      {
-        id: 1,
-        name: 'Community Emergency Shelter',
-        type: 'shelter',
-        lat: lat + 0.05,
-        lng: lng + 0.05,
-        distance: 5.2 // km
-      },
-      {
-        id: 2,
-        name: 'City General Hospital',
-        type: 'hospital',
-        lat: lat - 0.03,
-        lng: lng + 0.07,
-        distance: 7.8
-      },
-      {
-        id: 3,
-        name: 'Fire Station #42',
-        type: 'fire',
-        lat: lat + 0.08,
-        lng: lng - 0.02,
-        distance: 8.5
-      }
-    ];
-  };
-
-  const getDisasterIcon = (category) => {
-    const iconColors = {
-      wildfires: 'red',
-      severeStorms: 'orange',
-      volcanoes: 'purple',
-      earthquakes: 'blue',
-      floods: 'cyan'
-    };
-    
-    return new L.Icon({
-      iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${iconColors[category] || 'grey'}.png`,
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      shadowSize: [41, 41]
-    });
-  };
-
-  const getShelterIcon = (type) => {
-    const icons = {
-      shelter: '🏠',
-      hospital: '🏥',
-      fire: '🚒',
-      police: '🚓'
-    };
-    return L.divIcon({
-      html: `<div style="font-size: 24px">${icons[type] || '📍'}</div>`,
-      className: 'shelter-icon'
-    });
-  };
-
-  const toggleLocationDetails = () => {
-    setShowLocationDetails(!showLocationDetails);
-  };
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, []);    
   
   const toggleProfileDropdown = () => {
     setShowProfileDropdown(!showProfileDropdown);
@@ -147,11 +128,93 @@ const MapPage = () => {
     window.location.href = '/';
   };
 
+  const getDisasterIcon = (category, isRecent) => {
+    const iconColors = {
+      wildfires: 'red',
+      severeStorms: 'orange',
+      volcanoes: 'purple',
+      earthquakes: 'blue',
+      floods: 'cyan'
+    };
+    const color = isRecent ? 'gold' : (iconColors[category] || 'grey');
+    return new L.Icon({
+      iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${color}.png`,
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+  };
+
+  const getShelterIcon = (type) => {
+    const icons = {
+      hospital: '🏥',
+      shelter: '🏠',
+      fire_station: '🚒'
+    };
+    return L.divIcon({
+      html: `<div style="font-size: 36px">${icons[type] || '📍'}</div>`,
+      className: 'shelter-icon'
+    });
+  };
+
+  const userIcon = L.divIcon({
+    className: 'user-location-icon',
+    html: '<div style="background-color: blue; width: 20px; height: 20px; border-radius: 50%;"></div>',
+    iconSize: [20, 20],
+    iconAnchor: [10, 10]
+  });
+
+  const haversineDistance = (lat1, lon1, lat2, lon2) => {
+    const toRad = (x) => (x * Math.PI) / 180;
+    const R = 6371; // Earth radius in km
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  const handleNavigateToNearestShelter = () => {
+    if (shelters.length === 0) {
+      alert('No shelters found nearby.');
+      return;
+    }
+
+    const nearestShelter = shelters.reduce((prev, current) => {
+      const prevDistance = haversineDistance(userLocation.lat, userLocation.lng, prev.lat, prev.lng);
+      const currentDistance = haversineDistance(userLocation.lat, userLocation.lng, current.lat, current.lng);
+      return currentDistance < prevDistance ? current : prev;
+    });
+
+    navigate(`/shelter/${nearestShelter.id}`, { state: { shelter: nearestShelter } });
+  };
+
+  const toggleLocationDetails = () => {
+    setShowLocationDetails(!showLocationDetails);
+  };
+
   if (loading) return <div className="loading">Loading safety data...</div>;
   if (error) return <div className="error">Error: {error}</div>;
   if (!userLocation) return <div className="error">Location access required</div>;
 
   const hasLocalDisasters = localDisasters.length > 0;
+
+  const preparednessTips = [
+    "Create an emergency kit with water, food, flashlight, and first aid supplies",
+    "Identify safe places in your home for different types of disasters",
+    "Learn basic first aid and CPR",
+    "Keep important documents in a waterproof container",
+    "Plan evacuation routes from your home and neighborhood",
+    "Stay informed about local emergency alerts and warnings",
+    "Practice emergency drills with your family",
+    "Know how to turn off utilities in your home",
+    "Keep your vehicle's gas tank at least half full",
+    "Store at least 3 days worth of water (1 gallon per person per day)"
+  ];
 
   return (
     <div className="map-page">
@@ -178,29 +241,52 @@ const MapPage = () => {
           )}
         </div>
         <div className="map-controls-top">
-          <button 
+          <button
             className={`btn ${showGlobalDisasters ? 'active' : ''}`}
             onClick={() => setShowGlobalDisasters(!showGlobalDisasters)}
           >
             {showGlobalDisasters ? 'Hide Global Disasters' : 'Show Global Disasters'}
           </button>
+          <button 
+              className="btn tips-toggle"
+              onClick={() => setShowPreparednessTips(!showPreparednessTips)}
+            >
+              {showPreparednessTips ? 'Hide Tips' : 'Show Preparedness Tips'}
+            </button>
         </div>
       </div>
       
+      {!hasLocalDisasters && showPreparednessTips && (
+      <div className="preparedness-tips-panel">
+        <h3>Safety Preparedness Tips</h3>
+        <button 
+          className="close-tips-btn"
+          onClick={() => setShowPreparednessTips(false)}
+        >
+          ×
+        </button>
+        <ul>
+          {preparednessTips.map((tip, index) => (
+            <li key={index}>{tip}</li>
+          ))}
+        </ul>
+      </div>
+    )}    
+
       <div className="map-container">
-        <MapContainer 
-          center={[userLocation.lat, userLocation.lng]} 
-          zoom={5} // Start with a wider zoom to see global context
+      <MapContainer
+          center={[userLocation.lat, userLocation.lng]}
+          zoom={5}
           style={{ height: '100%', width: '100%' }}
         >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          
-          {/* User location */}
-          <Marker 
+
+          <Marker
             position={[userLocation.lat, userLocation.lng]}
+            icon={userIcon}
             eventHandlers={{ click: toggleLocationDetails }}
           >
             <Popup>
@@ -213,55 +299,46 @@ const MapPage = () => {
               )}
             </Popup>
           </Marker>
-          
-          {/* Local shelters */}
-          {shelters.map(shelter => (
-            <Marker
-              key={shelter.id}
-              position={[shelter.lat, shelter.lng]}
-              icon={getShelterIcon(shelter.type)}
-            >
-              <Popup>
-                <strong>{shelter.name}</strong>
-                <p>{shelter.type === 'hospital' ? 'Hospital' : 
-                    shelter.type === 'fire' ? 'Fire Station' : 'Emergency Shelter'}</p>
-                <p>{shelter.distance.toFixed(1)} km away</p>
-              </Popup>
-            </Marker>
-          ))}
-          
-          {/* Local disasters (always shown) */}
-          {localDisasters.map((disaster) => (
-            <Marker
-              key={`local-${disaster.id}`}
-              position={[disaster.geometry[0].coordinates[1], disaster.geometry[0].coordinates[0]]}
-              icon={getDisasterIcon(disaster.categories[0].id)}
-            >
-              <Popup>
-                <h3>{disaster.title} (Nearby)</h3>
-                <p>Type: {disaster.categories[0].title}</p>
-                <p>Date: {new Date(disaster.geometry[0].date).toLocaleString()}</p>
-                <a href={disaster.sources[0].url} target="_blank" rel="noopener noreferrer">
-                  More info
-                </a>
-              </Popup>
-            </Marker>
-          ))}
-          
-          {/* Global disasters (toggleable) */}
-          {showGlobalDisasters && globalDisasters
-            .filter(globalDis => 
-              !localDisasters.some(localDis => localDis.id === globalDis.id)
-            )
-            .map((disaster) => (
+          <Circle
+            center={[userLocation.lat, userLocation.lng]}
+            radius={500000}
+            pathOptions={{ color: 'blue', fillColor: 'blue', fillOpacity: 0.1 }}
+          />
+
+          <MarkerClusterGroup>
+            {shelters.map(shelter => (
               <Marker
-                key={`global-${disaster.id}`}
-                position={[disaster.geometry[0].coordinates[1], disaster.geometry[0].coordinates[0]]}
-                icon={getDisasterIcon(disaster.categories[0].id)}
-                opacity={0.7} // Make global disasters slightly transparent
+                key={shelter.id}
+                position={[shelter.lat, shelter.lng]}
+                icon={getShelterIcon(shelter.type)}
               >
                 <Popup>
-                  <h3>{disaster.title} (Global)</h3>
+                  <strong>{shelter.name}</strong>
+                  <p>
+                    {shelter.type === 'hospital'
+                      ? 'Hospital'
+                      : shelter.type === 'shelter'
+                      ? 'Shelter'
+                      : shelter.type === 'fire_station'
+                      ? 'Fire Station'
+                      : 'Safe Zone'}
+                  </p>
+                </Popup>
+              </Marker>
+            ))}
+          </MarkerClusterGroup>
+          
+          {/* Local disasters (always shown) */}
+          {localDisasters.map(disaster => {
+            const isRecent = Date.now() - new Date(disaster.geometry[0].date) < 24 * 60 * 60 * 1000;
+            return (
+              <Marker
+                key={`local-${disaster.id}`}
+                position={[disaster.geometry[0].coordinates[1], disaster.geometry[0].coordinates[0]]}
+                icon={getDisasterIcon(disaster.categories[0].id, isRecent)}
+              >
+                <Popup>
+                  <h3>{disaster.title} (Nearby)</h3>
                   <p>Type: {disaster.categories[0].title}</p>
                   <p>Date: {new Date(disaster.geometry[0].date).toLocaleString()}</p>
                   <a href={disaster.sources[0].url} target="_blank" rel="noopener noreferrer">
@@ -269,35 +346,41 @@ const MapPage = () => {
                   </a>
                 </Popup>
               </Marker>
-            ))}
+            );
+          })}
           
-          {/* Safety info panel when no local disasters */}
-          {!hasLocalDisasters && (
-            <div className="safety-info-panel">
-              <h3>Safety Preparedness</h3>
-              <div className="safety-tips">
-                <div className="tip-card">
-                  <h4>Emergency Kit Checklist</h4>
-                  <ul>
-                    <li>Water (1 gallon per person per day)</li>
-                    <li>Non-perishable food</li>
-                    <li>First aid kit</li>
-                    <li>Flashlight + batteries</li>
-                  </ul>
-                </div>
-                <div className="tip-card">
-                  <h4>Global Disaster Watch</h4>
-                  <p>{globalDisasters.length} active disasters worldwide</p>
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Global disasters (toggleable) */}
+          {showGlobalDisasters &&
+            globalDisasters
+              .filter(globalDis => !localDisasters.some(localDis => localDis.id === globalDis.id))
+              .map(disaster => {
+                const isRecent = Date.now() - new Date(disaster.geometry[0].date) < 24 * 60 * 60 * 1000;
+                return (
+                  <Marker
+                    key={`global-${disaster.id}`}
+                    position={[disaster.geometry[0].coordinates[1], disaster.geometry[0].coordinates[0]]}
+                    icon={getDisasterIcon(disaster.categories[0].id, isRecent)}
+                    opacity={0.7}
+                  >
+                    <Popup>
+                      <h3>{disaster.title} (Global)</h3>
+                      <p>Type: {disaster.categories[0].title}</p>
+                      <p>Date: {new Date(disaster.geometry[0].date).toLocaleString()}</p>
+                      <a href={disaster.sources[0].url} target="_blank" rel="noopener noreferrer">
+                        More info
+                      </a>
+                    </Popup>
+                  </Marker>
+                );
+              })}
         </MapContainer>
-      </div>
-      
+      </div>         
+       
       <div className="map-controls">
         <button className="btn emergency">SOS Emergency</button>
-        <button className="btn shelters">Navigate to Nearest Shelter</button>
+        <button className="btn shelters" onClick={handleNavigateToNearestShelter}>
+          Navigate to Nearest Shelter
+        </button>
       </div>
     </div>
   );
