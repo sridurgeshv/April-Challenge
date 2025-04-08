@@ -1,7 +1,9 @@
 .welcome-page {
   position: relative;
   height: 100vh;
-  background: linear-gradient(to right, #2b5876, #4e4376);
+  background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
   color: white;
   display: flex;
   align-items: center;
@@ -10,34 +12,131 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Emergency pulse animation */
+.welcome-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle, rgba(255,0,0,0.1) 0%, rgba(255,0,0,0) 70%);
+  opacity: 0.7;
+  z-index: 0;
+  animation: pulse 4s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { opacity: 0.5; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* Digital noise overlay */
+.welcome-page::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  z-index: 0;
+}
+
 .welcome-content {
   text-align: center;
   z-index: 1;
+  transform: translateY(0);
+  animation: float 6s ease-in-out infinite;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 3rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
 }
 
 .welcome-content h1 {
-  font-size: 3rem;
+  font-size: 3.5rem;
   margin-bottom: 0.5rem;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  animation: textPulse 4s infinite;
+  letter-spacing: 2px;
+}
+
+@keyframes textPulse {
+  0% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+  50% { text-shadow: 0 0 20px rgba(255, 154, 0, 0.8), 0 0 30px rgba(255, 154, 0, 0.5); }
+  100% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
 }
 
 .welcome-content p {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
+  font-size: 1.4rem;
+  margin-bottom: 2.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 3px;
 }
 
 .welcome-content button {
-  padding: 0.8rem 1.8rem;
-  font-size: 1rem;
-  background-color: #ff9a00;
+  padding: 1rem 2.2rem;
+  font-size: 1.1rem;
+  background: linear-gradient(45deg, #ff9a00, #ff6a00);
   border: none;
-  border-radius: 8px;
+  border-radius: 50px;
   color: white;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 154, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .welcome-content button:hover {
-  background-color: #e07b00;
+  transform: translateY(-3px);
+  box-shadow: 0 7px 20px rgba(255, 154, 0, 0.6);
+  background: linear-gradient(45deg, #ff6a00, #ff9a00);
+}
+
+.welcome-content button:active {
+  transform: translateY(1px);
+}
+
+.welcome-content button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.5s, opacity 0.5s;
+  opacity: 0;
+}
+
+.welcome-content button:hover::after {
+  transform: translate(-50%, -50%) scale(20);
+  opacity: 0;
 }
 
 .register-panel {
@@ -45,63 +144,182 @@
   top: 50%;
   left: -300px;
   transform: translate(-50%, -50%);
-  width: 360px;
-  background: white;
-  color: #333;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
-  transition: left 0.6s ease-in-out;
+  width: 380px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  color: #222;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  transition: left 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
   z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .register-panel.slide-in {
   left: 50%;
+  animation: panelAppear 0.8s forwards;
+}
+
+@keyframes panelAppear {
+  0% { opacity: 0; transform: translate(-50%, -45%); }
+  100% { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+.register-panel h3 {
+  font-size: 1.6rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+  text-align: center;
+  font-weight: 600;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .register-form input {
   width: 100%;
-  padding: 0.8rem;
-  margin-bottom: 1rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-bottom: 1.2rem;
+  border-radius: 8px;
+  border: 2px solid rgba(204, 204, 204, 0.5);
+  background: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  transition: all 0.3s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.register-form input:focus {
+  border-color: #ff9a00;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 154, 0, 0.2);
 }
 
 .register-form button {
-  width: 50%;
-  padding: 0.7rem;
-  background-color: #fff;
-  color: black;
-  border: 1px grey solid;
-  border-radius: 6px;
+  width: 70%;
+  padding: 0.9rem;
+  background: linear-gradient(45deg, #ff9a00, #ff6a00);
+  color: white;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
+  transition: all 0.3s;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(255, 154, 0, 0.3);
+  margin-top: 0.5rem;
 }
 
 .register-form button:hover {
-  background-color: black;
-  color: white;
+  background: linear-gradient(45deg, #ff6a00, #ff9a00);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(255, 154, 0, 0.4);
+}
+
+.register-form button:active {
+  transform: translateY(0);
 }
 
 .msg {
-  margin-top: 1rem;
-  font-weight: bold;
+  margin-top: 1.2rem;
+  font-weight: 500;
   color: #2c3e50;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  text-align: center;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 6px;
+  animation: fadeIn 0.5s;
 }
 
-/* ✨ New Close Button Styling */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .close-btn {
   position: absolute;
-  top: 8px;
-  right: 12px;
-  font-size: 1.5rem;
+  top: 12px;
+  right: 15px;
+  font-size: 1.7rem;
   background: none;
   border: none;
-  color: #999;
+  color: #777;
   cursor: pointer;
-  transition: color 0.3s;
+  transition: all 0.3s;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
 }
 
 .close-btn:hover {
   color: #333;
+  background: rgba(0, 0, 0, 0.05);
+  transform: rotate(90deg);
+}
+
+/* Emergency theme elements */
+@keyframes emergency-blink {
+  0%, 50%, 100% { opacity: 0; }
+  25%, 75% { opacity: 1; }
+}
+
+.welcome-content::before {
+  content: "⚠️";
+  position: absolute;
+  top: -25px;
+  left: -25px;
+  font-size: 2.5rem;
+  animation: emergency-blink 4s infinite;
+}
+
+.welcome-content::after {
+  content: "⚠️";
+  position: absolute;
+  bottom: -25px;
+  right: -25px;
+  font-size: 2.5rem;
+  animation: emergency-blink 4s infinite;
+  animation-delay: 2s;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .welcome-content {
+    padding: 2rem;
+  }
+  
+  .welcome-content h1 {
+    font-size: 2.5rem;
+  }
+  
+  .welcome-content p {
+    font-size: 1.1rem;
+  }
+  
+  .register-panel {
+    width: 90%;
+    max-width: 350px;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-content h1 {
+    font-size: 2rem;
+  }
+  
+  .welcome-content p {
+    font-size: 1rem;
+    letter-spacing: 2px;
+  }
+  
+  .register-panel {
+    padding: 1.5rem;
+  }
 }
