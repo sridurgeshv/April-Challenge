@@ -374,10 +374,12 @@ const MapPage = () => {
                 );
               })}
         </MapContainer>
-      </div>         
+      </div>    
        
       <div className="map-controls">
-        <button className="btn emergency">SOS Emergency</button>
+      <button className="btn emergency">
+  SOS Emergency
+</button>
         <button className="btn shelters" onClick={handleNavigateToNearestShelter}>
           Navigate to Nearest Shelter
         </button>

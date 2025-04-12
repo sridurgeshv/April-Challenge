@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { auth } from '../firebase';
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import '../styles/WelcomePage.css';
 
 const WelcomePage = () => {
@@ -8,7 +10,17 @@ const WelcomePage = () => {
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
   const [message, setMessage] = useState('');
+  const [confirmationResult, setConfirmationResult] = useState(null);
   const navigate = useNavigate();
+
+  const setUpRecaptcha = () => {
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+      'size': 'invisible',
+      'callback': (response) => {
+        // reCAPTCHA solved, allow signInWithPhoneNumber.
+      }
+    });
+  };
 
   const handleSendOTP = async (e) => {
     e.preventDefault();
@@ -17,22 +29,17 @@ const WelcomePage = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/register/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phoneNumber }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        setOtpSent(true);
-        setMessage(data.message);
-      } else {
-        setMessage(data.message);
-      }
+      setUpRecaptcha();
+      const appVerifier = window.recaptchaVerifier;
+      const phone = `+91${phoneNumber}`; // Adjust country code as needed
+      
+      const result = await signInWithPhoneNumber(auth, phone, appVerifier);
+      setConfirmationResult(result);
+      setOtpSent(true);
+      setMessage('OTP sent successfully!');
     } catch (error) {
       console.error(error);
-      setMessage('Error sending OTP');
+      setMessage(`Error sending OTP: ${error.message}`);
     }
   };
 
@@ -41,22 +48,13 @@ const WelcomePage = () => {
     if (!otp) return setMessage('Please enter the OTP.');
 
     try {
-      const response = await fetch('http://localhost:5000/api/register/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phoneNumber, otp }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        setMessage(data.message);
-        setTimeout(() => navigate('/home'), 1000);
-      } else {
-        setMessage(data.message);
-      }
+      const result = await confirmationResult.confirm(otp);
+      const user = result.user;
+      setMessage('OTP verified successfully!');
+      setTimeout(() => navigate('/home'), 1000);
     } catch (error) {
       console.error(error);
-      setMessage('Error verifying OTP');
+      setMessage(`Error verifying OTP: ${error.message}`);
     }
   };
 
@@ -92,6 +90,7 @@ const WelcomePage = () => {
           <button type="submit">{otpSent ? 'Verify OTP' : 'Send OTP'}</button>
         </form>
         {message && <p className="msg">{message}</p>}
+        <div id="recaptcha-container"></div>
       </div>
     </div>
   );

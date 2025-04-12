@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './EmergencyContacts.css';
 
 const EmergencyContacts = () => {
@@ -10,19 +11,27 @@ const EmergencyContacts = () => {
     relationship: ''
   });
   const [validationErrors, setValidationErrors] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // In a real app, fetch emergency contacts from a database
-    // Mocking with sample data
-    const sampleContacts = [
-      { id: 1, name: 'Jane Smith', phoneNumber: '+1 (555) 987-6543', relationship: 'Spouse' },
-      { id: 2, name: 'Michael Johnson', phoneNumber: '+1 (555) 456-7890', relationship: 'Parent' }
-    ];
-    setContacts(sampleContacts);
+    const fetchContacts = async () => {
+      try {
+        // In a real app, you'd include authentication headers
+        const response = await axios.get('http://localhost:5000/api/emergency-contacts');
+        setContacts(response.data);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching contacts:', err);
+        setError('Failed to load emergency contacts');
+        setLoading(false);
+      }
+    };
+
+    fetchContacts();
   }, []);
 
   const validatePhoneNumber = (phoneNumber) => {
-    // Basic validation - could be enhanced with region-specific patterns
     const phoneRegex = /^\+?[0-9\s\-()]{7,20}$/;
     return phoneRegex.test(phoneNumber);
   };
@@ -48,23 +57,30 @@ const EmergencyContacts = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleAddContact = (e) => {
+  const handleAddContact = async (e) => {
     e.preventDefault();
     
     if (validateForm()) {
-      const newContactWithId = {
-        ...newContact,
-        id: Date.now() // Simple way to generate a unique ID
-      };
-      
-      setContacts([...contacts, newContactWithId]);
-      setNewContact({ name: '', phoneNumber: '', relationship: '' });
-      setShowAddForm(false);
+      try {
+        const response = await axios.post('http://localhost:5000/api/emergency-contacts', newContact);
+        setContacts([...contacts, response.data]);
+        setNewContact({ name: '', phoneNumber: '', relationship: '' });
+        setShowAddForm(false);
+      } catch (err) {
+        console.error('Error adding contact:', err);
+        setError('Failed to add contact');
+      }
     }
   };
 
-  const handleDeleteContact = (id) => {
-    setContacts(contacts.filter(contact => contact.id !== id));
+  const handleDeleteContact = async (id) => {
+    try {
+      await axios.delete(`/api/emergency-contacts/${id}`);
+      setContacts(contacts.filter(contact => contact._id !== id));
+    } catch (err) {
+      console.error('Error deleting contact:', err);
+      setError('Failed to delete contact');
+    }
   };
 
   const handleInputChange = (e) => {
@@ -74,7 +90,6 @@ const EmergencyContacts = () => {
       [name]: value
     });
     
-    // Clear validation error when user types
     if (validationErrors[name]) {
       setValidationErrors({
         ...validationErrors,
@@ -82,6 +97,14 @@ const EmergencyContacts = () => {
       });
     }
   };
+
+  if (loading) {
+    return <div className="emergency-contacts">Loading contacts...</div>;
+  }
+
+  if (error) {
+    return <div className="emergency-contacts error">{error}</div>;
+  }
 
   return (
     <div className="emergency-contacts">
@@ -99,7 +122,7 @@ const EmergencyContacts = () => {
       ) : (
         <div className="contacts-list">
           {contacts.map(contact => (
-            <div key={contact.id} className="contact-card">
+            <div key={contact._id} className="contact-card">
               <div className="contact-info">
                 <div className="contact-name">{contact.name}</div>
                 <div className="contact-phone">{contact.phoneNumber}</div>
@@ -107,7 +130,7 @@ const EmergencyContacts = () => {
               </div>
               <button 
                 className="delete-contact"
-                onClick={() => handleDeleteContact(contact.id)}
+                onClick={() => handleDeleteContact(contact._id)}
               >
                 ×
               </button>

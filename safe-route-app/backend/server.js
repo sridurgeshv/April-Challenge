@@ -4,9 +4,17 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 require('dotenv').config();
+const mongoose = require('mongoose');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+mongoose.connect('mongodb+srv://ritika66:ritika12@cluster0.oaefvoz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Could not connect to MongoDB', err));
 
 // Handle CORS preflight requests
 app.use(cors({
@@ -27,6 +35,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/register', require('./routes/register'));
 app.use('/api/disasters', require('./routes/disasters'));
+app.use('/api/emergency-contacts', require('./routes/emergencyContacts'));
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

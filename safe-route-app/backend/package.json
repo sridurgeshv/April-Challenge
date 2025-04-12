@@ -24,8 +24,11 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "firebase": "^11.6.0",
     "helmet": "^8.1.0",
-    "morgan": "^1.10.0"
+    "mongoose": "^8.13.2",
+    "morgan": "^1.10.0",
+    "twilio": "^4.0.0-rc.6"
   },
   "devDependencies": {
     "nodemon": "^2.0.16"
