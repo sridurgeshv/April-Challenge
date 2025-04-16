@@ -102,7 +102,6 @@ This application requires API keys from:
 Number - 6789065432
 OTP    - 890765
 
-
 ## Contributing
 Instructions for contributing to the project.
 
