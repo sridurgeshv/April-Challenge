@@ -98,6 +98,11 @@ This application requires API keys from:
 - [ ] Testing and optimization
 - [ ] Documentation and deployment
 
+## OTP Test
+Number - 6789065432
+OTP    - 890765
+
+
 ## Contributing
 Instructions for contributing to the project.
 

@@ -253,3 +253,19 @@
   cursor: pointer;
   color: #666;
 }
+/* Add to your MapPage.css */
+.verified-report-popup {
+  max-width: 250px;
+}
+
+.report-meta {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 8px;
+}
+
+.report-excerpt {
+  margin: 8px 0;
+  font-size: 0.95em;
+  line-height: 1.4;
+}

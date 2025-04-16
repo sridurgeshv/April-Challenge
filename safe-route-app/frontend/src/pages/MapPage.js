@@ -5,6 +5,7 @@ import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
 import { fetchDisasters } from '../services/disasterService';
 import { getCurrentLocation } from '../services/locationService';
+import {fetchReliefWebReports} from '../services/reliefWebService';
 import 'leaflet/dist/leaflet.css';
 import '../styles/MapPage.css';
 
@@ -21,6 +22,9 @@ const MapPage = () => {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const [showPreparednessTips, setShowPreparednessTips] = useState(false);
+  const [reliefWebReports, setReliefWebReports] = useState([]);
+  const [showVerifiedReports, setShowVerifiedReports] = useState(true);
+
 
   const calculateBoundingBox = (lat, lng, radiusKm) => {
     const earthRadius = 6371;
@@ -66,40 +70,63 @@ const MapPage = () => {
         const sevenDaysAgo = new Date();
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-        const localData = await fetchDisasters({
-          days: 7,
-          status: 'open',
-          lat: location.lat,
-          lng: location.lng,
-          radius: 500
-        });
-        const filteredLocalDisasters = localData.events.filter(event =>
+        const [localData, globalData, realShelters, reliefData] = await Promise.all([
+          fetchDisasters({
+            days: 7,
+            status: 'open',
+            lat: location.lat,
+            lng: location.lng,
+            radius: 500
+          }),
+          fetchDisasters({
+            days: 7,
+            status: 'open',
+            limit: 50
+          }),
+          fetchShelters(location.lat, location.lng, 50),
+          fetchReliefWebReports({
+            lat: location.lat,
+            lng: location.lng,
+            radius: 1000
+          })
+        ]);
+  
+        setLocalDisasters(localData.events.filter(event => 
           new Date(event.geometry[0].date) >= sevenDaysAgo
-        );
-        setLocalDisasters(filteredLocalDisasters);
-
-        const globalData = await fetchDisasters({
-          days: 7,
-          status: 'open',
-          limit: 50
-        });
-        const filteredGlobalDisasters = globalData.events.filter(event =>
+        ));
+        setGlobalDisasters(globalData.events.filter(event => 
           new Date(event.geometry[0].date) >= sevenDaysAgo
-        );
-        setGlobalDisasters(filteredGlobalDisasters);
-
-        const realShelters = await fetchShelters(location.lat, location.lng, 50);
+        ));
         setShelters(realShelters);
-
+        console.log('Fetched ReliefWeb Reports:', reliefData);
+        
+        // Log reports with coordinates
+        const reportsWithCoords = reliefData.filter(report => report.coordinates);
+        console.log('Reports with coordinates:', reportsWithCoords);
+        
+        // Temporarily include all reports to test rendering
+        setReliefWebReports(reliefData); // Comment out filter for now
+        /*
+        setReliefWebReports(reliefData.filter(report => 
+          report.coordinates && 
+          haversineDistance(
+            location.lat, 
+            location.lng,
+            report.coordinates[1],
+            report.coordinates[0]
+          ) <= 500
+        ));
+        */
         setLoading(false);
       } catch (err) {
-        setError(err.message);
+        setError(`Location Error: ${err.message}. Please ensure location services are enabled.`);
         setLoading(false);
       }
     };
+    
     loadData();
   }, []);
-    
+  
     // Close dropdown when clicking outside
     useEffect(() => {
       const handleClickOutside = (event) => {
@@ -373,6 +400,43 @@ const MapPage = () => {
                   </Marker>
                 );
               })}
+              {showVerifiedReports && reliefWebReports.map(report => {
+  if (!report.coordinates) {
+    console.warn('Skipping marker for report without coordinates:', report); // Debug log
+    return null;
+  }
+  
+  console.log('Rendering report marker:', report); // Debug log
+  
+  return (
+    <Marker
+      key={`reliefweb-${report.id}`}
+      position={[report.coordinates[1], report.coordinates[0]]} // [lat, lon]
+      icon={new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34]
+      })}
+    >
+      <Popup>
+        <div className="verified-report-popup">
+          <h3>Verified Report: {report.title}</h3>
+          <p className="report-meta">
+            {report.type} • {report.country} • {new Date(report.date).toLocaleDateString()}
+          </p>
+          <p className="report-excerpt">
+            {report.body.substring(0, 150)}...
+          </p>
+          <a href={report.url} target="_blank" rel="noopener noreferrer">
+            Read full report
+          </a>
+        </div>
+      </Popup>
+    </Marker>
+  );
+})}
         </MapContainer>
       </div>    
        
@@ -383,6 +447,12 @@ const MapPage = () => {
         <button className="btn shelters" onClick={handleNavigateToNearestShelter}>
           Navigate to Nearest Shelter
         </button>
+        <button
+  className={`btn ${showVerifiedReports ? 'active' : ''}`}
+  onClick={() => setShowVerifiedReports(!showVerifiedReports)}
+>
+  {showVerifiedReports ? 'Hide Verified Reports' : 'Show Verified Reports'}
+</button>
       </div>
     </div>
   );
