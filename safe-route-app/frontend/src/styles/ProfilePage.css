@@ -1,150 +1,204 @@
-.profile-wrapper {
-    width: 100%;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
+.emergency-profile {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Roboto', sans-serif;
+  color: #333;
+}
+
+.emergency-profile__header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #e74c3c;
+  padding-bottom: 15px;
+  position: relative;
+}
+
+.emergency-profile__title {
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  color: #e74c3c;
+  font-weight: 700;
+}
+
+.emergency-profile__back-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #e74c3c;
+  padding: 8px 12px;
+  position: absolute;
+  left: 0;
+  transition: all 0.2s ease;
+}
+
+.emergency-profile__back-btn:hover {
+  transform: translateX(-3px);
+}
+
+.emergency-profile__content {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+.emergency-profile__user-info {
+  grid-column: 1;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.1);
+  padding: 25px;
+  margin-bottom: 25px;
+  border-top: 4px solid #e74c3c;
+}
+
+.emergency-profile__contacts {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.1);
+  padding: 25px;
+  border-top: 4px solid #e74c3c;
+}
+
+.emergency-profile__settings {
+  grid-column: 1;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.1);
+  padding: 25px;
+  border-top: 4px solid #e74c3c;
+}
+
+.emergency-profile__section-title {
+  margin-top: 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #f2d7d5;
+  padding-bottom: 10px;
+  color: #e74c3c;
+  font-size: 1.25rem;
+}
+
+.emergency-profile__info-card {
+  background-color: #fafafa;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.emergency-profile__info-row {
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.emergency-profile__info-label {
+  width: 100px;
+  font-weight: 500;
+  color: #7b7b7b;
+}
+
+.emergency-profile__info-value {
+  flex: 1;
+  color: #333;
+}
+
+.emergency-profile__blood-type {
+  font-weight: 700;
+  color: #e74c3c;
+}
+
+.emergency-profile__edit-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  width: 100%;
+  transition: background-color 0.2s ease;
+}
+
+.emergency-profile__edit-btn:hover {
+  background-color: #c0392b;
+}
+
+.emergency-profile__field {
+  margin-bottom: 15px;
+}
+
+.emergency-profile__label {
+  display: block;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.emergency-profile__input,
+.emergency-profile__select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.emergency-profile__input:focus,
+.emergency-profile__select:focus {
+  outline: none;
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.1);
+}
+
+.emergency-profile__setting-row {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.emergency-profile__setting-label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.emergency-profile__setting-text {
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.emergency-profile__checkbox {
+  margin-right: 10px;
+  accent-color: #e74c3c;
+}
+
+.emergency-profile__loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 18px;
+  color: #e74c3c;
+}
+
+@media (max-width: 768px) {
+  .emergency-profile__content {
+    grid-template-columns: 1fr;
   }
   
-  .profile-header-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 30px;
-    border-bottom: 1px solid #dee2e6;
-    padding-bottom: 15px;
-    position: relative;
-  }
-  
-  .profile-header-container h1 {
-    width: 100%;
-    text-align: center;
-    margin: 0;
-  }
-  
-  .nav-back-button {
-    background: none;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    color: #1976d2;
-    padding: 8px 12px;
-    position: absolute;
-    left: 0;
-  }
-  
-  .nav-back-button:hover {
-    text-decoration: underline;
-  }
-  
-  .profile-content-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 25px;
-  }
-  
-  .profile-box {
-    background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    padding: 25px;
-    margin-bottom: 25px;
-  }
-  
-  .account-box {
+  .emergency-profile__user-info,
+  .emergency-profile__contacts,
+  .emergency-profile__settings {
     grid-column: 1;
   }
   
-  .emergency-box {
-    grid-column: 2;
-    grid-row: 1 / span 2;
+  .emergency-profile__contacts {
+    grid-row: auto;
   }
-  
-  .preferences-box {
-    grid-column: 1;
-  }
-  
-  .profile-box h2 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-    color: #333;
-  }
-  
-  .account-field {
-    margin-bottom: 15px;
-  }
-  
-  .account-field label {
-    display: block;
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 5px;
-  }
-  
-  .field-content {
-    font-size: 16px;
-    color: #333;
-    padding: 8px 0;
-  }
-  
-  .account-edit-btn {
-    background-color: #1976d2;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-    margin-top: 10px;
-  }
-  
-  .account-edit-btn:hover {
-    background-color: #1565c0;
-  }
-  
-  .preference-row {
-    margin-bottom: 15px;
-  }
-  
-  .preference-row label {
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-  }
-  
-  .preference-row input[type="checkbox"] {
-    margin-right: 10px;
-  }
-  
-  .preference-row select {
-    margin-top: 5px;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    width: 100%;
-  }
-  
-  @media (max-width: 768px) {
-    .profile-content-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .account-box,
-    .emergency-box,
-    .preferences-box {
-      grid-column: 1;
-    }
-    
-    .emergency-box {
-      grid-row: auto;
-    }
-  }
-  
-  .profile-loader {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    font-size: 18px;
-    color: #666;
-  }
+}
