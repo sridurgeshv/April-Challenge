@@ -1,216 +1,239 @@
-.emergency-contacts {
+.contacts {
   width: 100%;
   height: 100%;
 }
 
-.emergency-contacts__header {
+.contacts__header {
   margin-bottom: 20px;
 }
 
-.emergency-contacts__title {
+.contacts__title {
   margin-top: 0;
   margin-bottom: 10px;
-  color: #e74c3c;
+  color: #3b82f6;
   font-size: 1.25rem;
+  font-weight: 600;
 }
 
-.emergency-contacts__description {
+.contacts__description {
   font-size: 14px;
-  color: #777;
+  color: #6c757d;
   margin: 0 0 20px 0;
 }
 
-.emergency-contacts__empty {
-  background-color: #f9f9f9;
-  border: 1px dashed #ddd;
+.contacts__empty {
+  background-color: #f8f9fa;
+  border: 1px dashed #ced4da;
   border-radius: 8px;
   padding: 30px;
   text-align: center;
-  color: #888;
+  color: #6c757d;
 }
 
-.emergency-contacts__list {
+.contacts__list {
   margin-bottom: 20px;
 }
 
-.emergency-contacts__card {
+.contacts__card {
   background: #fff;
-  border: 1px solid #f0f0f0;
-  border-left: 4px solid #e74c3c;
-  border-radius: 6px;
+  border: 1px solid #e9ecef;
+  border-left: 4px solid #3b82f6;
+  border-radius: 8px;
   margin-bottom: 12px;
   padding: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+  transition: all 0.2s ease;
 }
 
-.emergency-contacts__card:hover {
+.contacts__card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
 }
 
-.emergency-contacts__info {
+.contacts__info {
   flex: 1;
 }
 
-.emergency-contacts__name {
+.contacts__name {
   font-weight: 600;
   font-size: 16px;
   margin-bottom: 6px;
+  color: #343a40;
 }
 
-.emergency-contacts__details {
+.contacts__details {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   font-size: 14px;
-  color: #666;
+  color: #6c757d;
 }
 
-.emergency-contacts__relationship {
-  background-color: #ffeceb;
-  color: #e74c3c;
+.contacts__relationship {
+  background-color: #e7f5ff;
+  color: #3b82f6;
   padding: 2px 8px;
   border-radius: 12px;
   font-size: 12px;
   font-weight: 500;
 }
 
-.emergency-contacts__phone {
-  color: #555;
+.contacts__phone {
+  color: #495057;
 }
 
-.emergency-contacts__blood {
+.contacts__blood {
   font-weight: 500;
-  color: #e74c3c;
+  color: #3b82f6;
 }
 
-.emergency-contacts__delete {
+.contacts__delete {
   background: none;
   border: none;
-  color: #ccc;
-  font-size: 22px;
   cursor: pointer;
-  padding: 0 8px;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.contacts__delete:hover {
+  background-color: #f8f9fa;
+}
+
+.contacts__delete-icon {
+  color: #adb5bd;
+  font-size: 22px;
   transition: color 0.2s ease;
 }
 
-.emergency-contacts__delete:hover {
-  color: #e74c3c;
+.contacts__delete:hover .contacts__delete-icon {
+  color: #dc3545;
 }
 
-.emergency-contacts__form {
-  background-color: #f9f9f9;
+.contacts__form {
+  background-color: #f8f9fa;
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 20px;
+  border: 1px solid #e9ecef;
 }
 
-.emergency-contacts__form-group {
+.contacts__form-group {
   margin-bottom: 15px;
 }
 
-.emergency-contacts__label {
+.contacts__label {
   display: block;
   font-size: 14px;
-  color: #555;
+  color: #495057;
   margin-bottom: 5px;
+  font-weight: 500;
 }
 
-.emergency-contacts__input,
-.emergency-contacts__select {
+.contacts__input,
+.contacts__select {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 12px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
   font-size: 14px;
+  transition: all 0.2s ease;
 }
 
-.emergency-contacts__input:focus,
-.emergency-contacts__select:focus {
+.contacts__input:focus,
+.contacts__select:focus {
   outline: none;
-  border-color: #e74c3c;
-  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.1);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
-.emergency-contacts__error-text {
-  color: #e74c3c;
+.contacts__error-text {
+  color: #dc3545;
   font-size: 12px;
   margin-top: 5px;
   display: block;
 }
 
-.emergency-contacts__form-buttons {
+.contacts__form-buttons {
   display: flex;
   gap: 10px;
   margin-top: 20px;
 }
 
-.emergency-contacts__save-btn,
-.emergency-contacts__add-btn {
-  background-color: #e74c3c;
+.contacts__save-btn,
+.contacts__add-btn {
+  background-color: #3b82f6;
   color: white;
   border: none;
-  padding: 10px 15px;
-  border-radius: 4px;
+  padding: 12px 15px;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-.emergency-contacts__save-btn:hover,
-.emergency-contacts__add-btn:hover {
-  background-color: #c0392b;
+.contacts__save-btn:hover,
+.contacts__add-btn:hover {
+  background-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.25);
 }
 
-.emergency-contacts__cancel-btn {
-  background-color: #f5f5f5;
-  color: #666;
-  border: 1px solid #ddd;
-  padding: 10px 15px;
-  border-radius: 4px;
+.contacts__cancel-btn {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  border: 1px solid #ced4da;
+  padding: 12px 15px;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-.emergency-contacts__cancel-btn:hover {
-  background-color: #eaeaea;
+.contacts__cancel-btn:hover {
+  background-color: #e9ecef;
 }
 
-.emergency-contacts__add-btn {
+.contacts__add-btn {
   width: 100%;
+  font-size: 14px;
 }
 
-.emergency-contacts__add-btn:disabled {
-  background-color: #f5f5f5;
-  color: #aaa;
+.contacts__add-btn:disabled {
+  background-color: #e9ecef;
+  color: #adb5bd;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
-.emergency-contacts__note {
+.contacts__note {
   background-color: #fff3cd;
   border-left: 4px solid #ffc107;
-  padding: 10px 15px;
+  padding: 12px 15px;
   font-size: 13px;
   color: #856404;
-  border-radius: 4px;
+  border-radius: 6px;
   margin-top: 15px;
 }
 
-.emergency-contacts__loading {
+.contacts__loading {
   text-align: center;
   padding: 30px;
-  color: #888;
+  color: #6c757d;
 }
 
-.emergency-contacts__error {
-  color: #e74c3c;
+.contacts__error {
+  color: #dc3545;
   text-align: center;
   padding: 20px;
-  background-color: #ffeceb;
+  background-color: #f8d7da;
   border-radius: 6px;
+  margin-bottom: 20px;
 }

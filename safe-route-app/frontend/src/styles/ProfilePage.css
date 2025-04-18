@@ -1,204 +1,229 @@
-.emergency-profile {
+.profile-page {
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
-  font-family: 'Roboto', sans-serif;
-  color: #333;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  color: #343a40;
+  background-color: #f8f9fa;
 }
 
-.emergency-profile__header {
+.profile-page__header {
   display: flex;
   align-items: center;
   margin-bottom: 30px;
-  border-bottom: 2px solid #e74c3c;
+  border-bottom: 2px solid #3b82f6;
   padding-bottom: 15px;
   position: relative;
 }
 
-.emergency-profile__title {
+.profile-page__title {
   width: 100%;
   text-align: center;
   margin: 0;
-  color: #e74c3c;
+  color: #3b82f6;
   font-weight: 700;
+  font-size: 1.75rem;
 }
 
-.emergency-profile__back-btn {
+.profile-page__back-btn {
   background: none;
   border: none;
   font-size: 16px;
   cursor: pointer;
-  color: #e74c3c;
+  color: #3b82f6;
   padding: 8px 12px;
   position: absolute;
   left: 0;
   transition: all 0.2s ease;
 }
 
-.emergency-profile__back-btn:hover {
+.profile-page__back-btn:hover {
   transform: translateX(-3px);
 }
 
-.emergency-profile__content {
+.profile-page__content {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 25px;
 }
 
-.emergency-profile__user-info {
+.profile-page__user-info {
   grid-column: 1;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.1);
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   padding: 25px;
   margin-bottom: 25px;
-  border-top: 4px solid #e74c3c;
+  border-top: 4px solid #3b82f6;
 }
 
-.emergency-profile__contacts {
+.profile-page__contacts {
   grid-column: 2;
   grid-row: 1 / span 2;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.1);
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   padding: 25px;
-  border-top: 4px solid #e74c3c;
+  border-top: 4px solid #3b82f6;
 }
 
-.emergency-profile__settings {
+.profile-page__settings {
   grid-column: 1;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.1);
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   padding: 25px;
-  border-top: 4px solid #e74c3c;
+  border-top: 4px solid #3b82f6;
 }
 
-.emergency-profile__section-title {
+.profile-page__section-title {
   margin-top: 0;
   margin-bottom: 20px;
-  border-bottom: 1px solid #f2d7d5;
+  border-bottom: 1px solid #e9ecef;
   padding-bottom: 10px;
-  color: #e74c3c;
+  color: #3b82f6;
   font-size: 1.25rem;
+  font-weight: 600;
 }
 
-.emergency-profile__info-card {
-  background-color: #fafafa;
+.profile-page__info-card {
+  background-color: #f8f9fa;
   border-radius: 8px;
   padding: 15px;
   margin-bottom: 20px;
+  border-left: 3px solid #3b82f6;
 }
 
-.emergency-profile__info-row {
+.profile-page__info-row {
   display: flex;
   margin-bottom: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #e9ecef;
 }
 
-.emergency-profile__info-label {
-  width: 100px;
-  font-weight: 500;
-  color: #7b7b7b;
+.profile-page__info-row:last-child {
+  border-bottom: none;
 }
 
-.emergency-profile__info-value {
+.profile-page__info-label {
+  width: 110px;
+  font-weight: 600;
+  color: #6c757d;
+}
+
+.profile-page__info-value {
   flex: 1;
-  color: #333;
+  color: #343a40;
 }
 
-.emergency-profile__blood-type {
+.profile-page__blood-type {
   font-weight: 700;
-  color: #e74c3c;
+  color: #3b82f6;
 }
 
-.emergency-profile__edit-btn {
-  background-color: #e74c3c;
+.profile-page__edit-btn {
+  background-color: #3b82f6;
   color: white;
   border: none;
-  padding: 10px 15px;
-  border-radius: 4px;
+  padding: 12px 15px;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
   width: 100%;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-.emergency-profile__edit-btn:hover {
-  background-color: #c0392b;
+.profile-page__edit-btn:hover {
+  background-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.25);
 }
 
-.emergency-profile__field {
+.profile-page__field {
   margin-bottom: 15px;
 }
 
-.emergency-profile__label {
+.profile-page__label {
   display: block;
   font-size: 14px;
-  color: #666;
+  color: #6c757d;
   margin-bottom: 5px;
+  font-weight: 500;
 }
 
-.emergency-profile__input,
-.emergency-profile__select {
+.profile-page__input,
+.profile-page__select {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
   font-size: 14px;
+  transition: all 0.2s ease;
 }
 
-.emergency-profile__input:focus,
-.emergency-profile__select:focus {
+.profile-page__input:focus,
+.profile-page__select:focus {
   outline: none;
-  border-color: #e74c3c;
-  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.1);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
-.emergency-profile__setting-row {
+.profile-page__setting-row {
   margin-bottom: 15px;
   display: flex;
   align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e9ecef;
 }
 
-.emergency-profile__setting-label {
+.profile-page__setting-row:last-child {
+  border-bottom: none;
+}
+
+.profile-page__setting-label {
   display: flex;
   align-items: center;
   font-size: 14px;
   cursor: pointer;
 }
 
-.emergency-profile__setting-text {
+.profile-page__setting-text {
   font-size: 14px;
   margin-right: 10px;
+  font-weight: 500;
+  color: #6c757d;
 }
 
-.emergency-profile__checkbox {
+.profile-page__checkbox {
   margin-right: 10px;
-  accent-color: #e74c3c;
+  width: 16px;
+  height: 16px;
+  accent-color: #3b82f6;
 }
 
-.emergency-profile__loader {
+.profile-page__loader {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   font-size: 18px;
-  color: #e74c3c;
+  color: #3b82f6;
+  background-color: #f8f9fa;
 }
 
 @media (max-width: 768px) {
-  .emergency-profile__content {
+  .profile-page__content {
     grid-template-columns: 1fr;
   }
   
-  .emergency-profile__user-info,
-  .emergency-profile__contacts,
-  .emergency-profile__settings {
+  .profile-page__user-info,
+  .profile-page__contacts,
+  .profile-page__settings {
     grid-column: 1;
   }
   
-  .emergency-profile__contacts {
+  .profile-page__contacts {
     grid-row: auto;
   }
 }

@@ -25,6 +25,8 @@ const EmergencyContacts = () => {
         console.error('Error fetching contacts:', err);
         setError('Failed to load emergency contacts');
         setLoading(false);
+        // Initialize with empty contacts array instead of showing error
+        setContacts([]);
       }
     };
 
@@ -79,7 +81,8 @@ const EmergencyContacts = () => {
 
   const handleDeleteContact = async (id) => {
     try {
-      await axios.delete(`/api/emergency-contacts/${id}`);
+      // Fix: Added the base URL to the delete request
+      await axios.delete(`http://localhost:5000/api/emergency-contacts/${id}`);
       setContacts(contacts.filter(contact => contact._id !== id));
     } catch (err) {
       console.error('Error deleting contact:', err);
@@ -103,44 +106,40 @@ const EmergencyContacts = () => {
   };
 
   if (loading) {
-    return <div className="emergency-contacts__loading">Loading contacts...</div>;
-  }
-
-  if (error) {
-    return <div className="emergency-contacts__error">{error}</div>;
+    return <div className="contacts__loading">Loading contacts...</div>;
   }
 
   return (
-    <div className="emergency-contacts">
-      <div className="emergency-contacts__header">
-        <h2 className="emergency-contacts__title">Emergency Contacts</h2>
-        <p className="emergency-contacts__description">
+    <div className="contacts">
+      <div className="contacts__header">
+        <h2 className="contacts__title">Emergency Contacts</h2>
+        <p className="contacts__description">
           These contacts will be notified during emergency situations
         </p>
       </div>
 
       {contacts.length === 0 ? (
-        <div className="emergency-contacts__empty">
+        <div className="contacts__empty">
           <p>No emergency contacts added yet.</p>
         </div>
       ) : (
-        <div className="emergency-contacts__list">
+        <div className="contacts__list">
           {contacts.map(contact => (
-            <div key={contact._id} className="emergency-contacts__card">
-              <div className="emergency-contacts__info">
-                <div className="emergency-contacts__name">{contact.name}</div>
-                <div className="emergency-contacts__details">
-                  <span className="emergency-contacts__relationship">{contact.relationship}</span>
-                  <span className="emergency-contacts__phone">{contact.phoneNumber}</span>
-                  <span className="emergency-contacts__blood">Blood: {contact.bloodGroup || 'Unknown'}</span>
+            <div key={contact._id} className="contacts__card">
+              <div className="contacts__info">
+                <div className="contacts__name">{contact.name}</div>
+                <div className="contacts__details">
+                  <span className="contacts__relationship">{contact.relationship}</span>
+                  <span className="contacts__phone">{contact.phoneNumber}</span>
+                  <span className="contacts__blood">Blood: {contact.bloodGroup || 'Unknown'}</span>
                 </div>
               </div>
               <button 
-                className="emergency-contacts__delete"
+                className="contacts__delete"
                 onClick={() => handleDeleteContact(contact._id)}
                 aria-label="Delete contact"
               >
-                ×
+                <span className="contacts__delete-icon">×</span>
               </button>
             </div>
           ))}
@@ -148,38 +147,38 @@ const EmergencyContacts = () => {
       )}
 
       {showAddForm ? (
-        <form className="emergency-contacts__form" onSubmit={handleAddContact}>
-          <div className="emergency-contacts__form-group">
-            <label className="emergency-contacts__label">Name</label>
+        <form className="contacts__form" onSubmit={handleAddContact}>
+          <div className="contacts__form-group">
+            <label className="contacts__label">Name</label>
             <input
               type="text"
               name="name"
-              className="emergency-contacts__input"
+              className="contacts__input"
               value={newContact.name}
               onChange={handleInputChange}
               placeholder="Contact name"
             />
-            {validationErrors.name && <span className="emergency-contacts__error-text">{validationErrors.name}</span>}
+            {validationErrors.name && <span className="contacts__error-text">{validationErrors.name}</span>}
           </div>
           
-          <div className="emergency-contacts__form-group">
-            <label className="emergency-contacts__label">Phone Number</label>
+          <div className="contacts__form-group">
+            <label className="contacts__label">Phone Number</label>
             <input
               type="text"
               name="phoneNumber"
-              className="emergency-contacts__input"
+              className="contacts__input"
               value={newContact.phoneNumber}
               onChange={handleInputChange}
               placeholder="+1 (555) 123-4567"
             />
-            {validationErrors.phoneNumber && <span className="emergency-contacts__error-text">{validationErrors.phoneNumber}</span>}
+            {validationErrors.phoneNumber && <span className="contacts__error-text">{validationErrors.phoneNumber}</span>}
           </div>
           
-          <div className="emergency-contacts__form-group">
-            <label className="emergency-contacts__label">Relationship</label>
+          <div className="contacts__form-group">
+            <label className="contacts__label">Relationship</label>
             <select
               name="relationship"
-              className="emergency-contacts__select"
+              className="contacts__select"
               value={newContact.relationship}
               onChange={handleInputChange}
             >
@@ -191,14 +190,14 @@ const EmergencyContacts = () => {
               <option value="Friend">Friend</option>
               <option value="Other">Other</option>
             </select>
-            {validationErrors.relationship && <span className="emergency-contacts__error-text">{validationErrors.relationship}</span>}
+            {validationErrors.relationship && <span className="contacts__error-text">{validationErrors.relationship}</span>}
           </div>
 
-          <div className="emergency-contacts__form-group">
-            <label className="emergency-contacts__label">Blood Group</label>
+          <div className="contacts__form-group">
+            <label className="contacts__label">Blood Group</label>
             <select
               name="bloodGroup"
-              className="emergency-contacts__select"
+              className="contacts__select"
               value={newContact.bloodGroup}
               onChange={handleInputChange}
             >
@@ -213,14 +212,14 @@ const EmergencyContacts = () => {
               <option value="O-">O-</option>
               <option value="Unknown">Unknown</option>
             </select>
-            {validationErrors.bloodGroup && <span className="emergency-contacts__error-text">{validationErrors.bloodGroup}</span>}
+            {validationErrors.bloodGroup && <span className="contacts__error-text">{validationErrors.bloodGroup}</span>}
           </div>
           
-          <div className="emergency-contacts__form-buttons">
-            <button type="submit" className="emergency-contacts__save-btn">Save Contact</button>
+          <div className="contacts__form-buttons">
+            <button type="submit" className="contacts__save-btn">Save Contact</button>
             <button 
               type="button" 
-              className="emergency-contacts__cancel-btn"
+              className="contacts__cancel-btn"
               onClick={() => {
                 setShowAddForm(false);
                 setValidationErrors({});
@@ -232,7 +231,7 @@ const EmergencyContacts = () => {
         </form>
       ) : (
         <button 
-          className="emergency-contacts__add-btn"
+          className="contacts__add-btn"
           onClick={() => setShowAddForm(true)}
           disabled={contacts.length >= 4}
         >
@@ -241,7 +240,7 @@ const EmergencyContacts = () => {
       )}
       
       {contacts.length > 0 && (
-        <div className="emergency-contacts__note">
+        <div className="contacts__note">
           <p>Your emergency contacts will only be notified during actual emergencies.</p>
         </div>
       )}
