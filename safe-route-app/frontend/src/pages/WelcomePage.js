@@ -1,3 +1,4 @@
+// WelcomePage.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
@@ -60,12 +61,57 @@ const WelcomePage = () => {
 
   return (
     <div className="welcome-page">
+      <div className="emergency-icons">
+        <div className="icon-item"><i className="fas fa-ambulance"></i></div>
+        <div className="icon-item"><i className="fas fa-fire-extinguisher"></i></div>
+        <div className="icon-item"><i className="fas fa-first-aid"></i></div>
+        <div className="icon-item"><i className="fas fa-exclamation-triangle"></i></div>
+        <div className="icon-item"><i className="fas fa-phone-alt"></i></div>
+        <div className="icon-item"><i className="fas fa-map-marked-alt"></i></div>
+      </div>
+      
       <div className="welcome-content">
-        <h1>Welcome to SafeRoute 🌍</h1>
-        <p>Your personal disaster response companion</p>
-        <button onClick={() => setShowRegister(true)}>
-          Login with Mobile Number
+        <div className="logo">
+          <div className="logo-icon">SR</div>
+        </div>
+        
+        <h1>Welcome to SafeRoute</h1>
+        <p className="tagline">Your personal disaster response companion</p>
+        
+        <div className="features">
+          <div className="feature">
+            <div className="feature-icon">
+              <i className="fas fa-location-arrow"></i>
+            </div>
+            <h3>Real-time Alerts</h3>
+            <p>Get instant notifications about emergencies near you</p>
+          </div>
+          
+          <div className="feature">
+            <div className="feature-icon">
+              <i className="fas fa-route"></i>
+            </div>
+            <h3>Safe Navigation</h3>
+            <p>Find the safest routes during disaster situations</p>
+          </div>
+          
+          <div className="feature">
+            <div className="feature-icon">
+              <i className="fas fa-hands-helping"></i>
+            </div>
+            <h3>Emergency Resources</h3>
+            <p>Access vital information and emergency contacts</p>
+          </div>
+        </div>
+        
+        <button className="login-btn" onClick={() => setShowRegister(true)}>
+          <i className="fas fa-user-shield"></i> Login with Mobile
         </button>
+        
+        <div className="emergency-tips">
+          <h4>Did you know?</h4>
+          <p>Having an emergency plan can increase your chances of safety by up to 70% during disasters.</p>
+        </div>
       </div>
 
       <div className={`register-panel ${showRegister ? 'slide-in' : ''}`}>
