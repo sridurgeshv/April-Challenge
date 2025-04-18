@@ -4,6 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 require('dotenv').config();
+const axios = require('axios'); // Add axios
 const mongoose = require('mongoose');
 
 const app = express();
@@ -19,7 +20,7 @@ mongoose.connect('mongodb+srv://ritika66:ritika12@cluster0.oaefvoz.mongodb.net/?
 // Handle CORS preflight requests
 app.use(cors({
   origin: (origin, cb) => cb(null, true),
-  methods: ['GET', 'POST', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE','OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }));
@@ -31,6 +32,18 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to SafeRoute API' });
+});
+
+// New route to proxy GDACS RSS feed
+app.get('/api/disaster-alerts', async (req, res) => {
+  try {
+    const response = await axios.get('https://www.gdacs.org/xml/rss.xml');
+    res.set('Content-Type', 'application/xml');
+    res.send(response.data);
+  } catch (error) {
+    console.error('Error fetching GDACS RSS feed:', error.message);
+    res.status(500).json({ message: 'Failed to fetch disaster alerts', error: error.message });
+  }
 });
 
 app.use('/api/register', require('./routes/register'));

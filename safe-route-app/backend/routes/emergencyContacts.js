@@ -1,9 +1,7 @@
-// backend/routes/emergencyContacts.js
 const express = require('express');
 const router = express.Router();
 const EmergencyContact = require('../models/EmergencyContact');
 
-// Get all emergency contacts (temporarily without user filtering)
 router.get('/', async (req, res) => {
   try {
     const contacts = await EmergencyContact.find();
@@ -16,13 +14,14 @@ router.get('/', async (req, res) => {
 
 // Add new emergency contact
 router.post('/', async (req, res) => {
-  const { name, phoneNumber, relationship } = req.body;
+  const { name, phoneNumber, relationship, bloodGroup } = req.body;
 
   try {
     const newContact = new EmergencyContact({
       name,
       phoneNumber,
-      relationship
+      relationship,
+      bloodGroup
     });
 
     const contact = await newContact.save();
@@ -36,12 +35,19 @@ router.post('/', async (req, res) => {
 // Delete emergency contact
 router.delete('/:id', async (req, res) => {
   try {
-    await EmergencyContact.findByIdAndRemove(req.params.id);
+    const contact = await EmergencyContact.findById(req.params.id);
+    if (!contact) {
+      return res.status(404).json({ msg: 'Contact not found' });
+    }
+    await EmergencyContact.findByIdAndDelete(req.params.id);
     res.json({ msg: 'Contact removed' });
   } catch (err) {
-    console.error(err);
+    console.error('Delete error:', err);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Contact not found' });
+    }
     res.status(500).send('Server Error');
   }
 });
 
-module.exports = router;
+module.exports = router; 

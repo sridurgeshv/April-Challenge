@@ -1,11 +1,10 @@
-// backend/models/EmergencyContact.js
 const mongoose = require('mongoose');
 
 const EmergencyContactSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: false // Changed from true to false
+    required: false
   },
   name: {
     type: String,
@@ -18,6 +17,10 @@ const EmergencyContactSchema = new mongoose.Schema({
   relationship: {
     type: String,
     required: true
+  },
+  bloodGroup: {
+    type: String,
+    required: false
   },
   deviceToken: {
     type: String,

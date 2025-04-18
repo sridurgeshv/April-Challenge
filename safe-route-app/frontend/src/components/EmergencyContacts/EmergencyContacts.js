@@ -81,12 +81,13 @@ const EmergencyContacts = () => {
 
   const handleDeleteContact = async (id) => {
     try {
-      // Fix: Added the base URL to the delete request
-      await axios.delete(`http://localhost:5000/api/emergency-contacts/${id}`);
+      console.log('Deleting contact with ID:', id); // Debugging log
+      const response = await axios.delete(`http://localhost:5000/api/emergency-contacts/${id}`);
       setContacts(contacts.filter(contact => contact._id !== id));
+      setError(null); // Clear any previous errors on success
     } catch (err) {
-      console.error('Error deleting contact:', err);
-      setError('Failed to delete contact');
+      console.error('Error deleting contact:', err.response ? err.response.data : err.message);
+      setError(err.response?.data?.msg || 'Failed to delete contact');
     }
   };
 
@@ -117,7 +118,9 @@ const EmergencyContacts = () => {
           These contacts will be notified during emergency situations
         </p>
       </div>
-
+  
+      {error && <div className="contacts__error">{error}</div>} {/* Add error display */}
+  
       {contacts.length === 0 ? (
         <div className="contacts__empty">
           <p>No emergency contacts added yet.</p>
@@ -145,7 +148,6 @@ const EmergencyContacts = () => {
           ))}
         </div>
       )}
-
       {showAddForm ? (
         <form className="contacts__form" onSubmit={handleAddContact}>
           <div className="contacts__form-group">

@@ -230,10 +230,7 @@
 }
 
 .contacts__error {
-  color: #dc3545;
-  text-align: center;
-  padding: 20px;
-  background-color: #f8d7da;
-  border-radius: 6px;
-  margin-bottom: 20px;
+  color: red;
+  margin-bottom: 10px;
+  font-size: 14px;
 }
