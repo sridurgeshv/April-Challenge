@@ -1,50 +1,72 @@
 # SafeRoute: Disaster Response & Evacuation Assistant
 
-An emergency application that helps users find safe zones, hospitals, and emergency services during natural disasters using real-time geolocation data.
+**SafeRoute** is an emergency response application designed to assist users during natural disasters. It enables real-time location tracking, disaster alert integration, and safe route navigation to nearby shelters, hospitals, and emergency services.
 
-### How It Works:
+---
 
-1. User shares their location (or manually inputs it).
-2. App fetches real-time disaster data (from APIs like NASA Disaster API, ReliefWeb, etc.).
-3. Safe zones and emergency shelters appear on the map (using OpenStreetMap data).
-4. App suggests the safest route to the nearest safe zone, avoiding blocked roads or dangerous areas.
-5. Users get emergency contacts (local fire stations, hospitals, NGOs, etc.).
-6. (Optional) User can report unsafe zones or request help, which is added to a live feed.
+## 🧭 Overview
 
-## Features
+SafeRoute leverages real-time geolocation and disaster data to:
 
-- Real-time disaster tracking and visualization
-- Safe zone and emergency shelter locator
-- Safe route navigation avoiding disaster areas
-- Emergency contacts and resources
-- Offline capability for emergency situations
+- Detect user location or accept manual input
+- Display ongoing disasters from trusted data sources
+- Identify nearby shelters and hospitals
+- Navigate users through the safest possible routes
+- Provide emergency contact details
+- Allow users to report unsafe areas or request help
 
-## Tech Stack
+---
+
+## 🚀 Features
+
+- 🔴 Real-time disaster alerts and visualization
+- 🛑 Safe zone and shelter locator
+- 🧭 Navigation with blocked road and hazard avoidance
+- 📞 Emergency contacts: fire stations, hospitals, NGOs
+- 📡 Offline support during connectivity issues
+- 📢 User-reported hazard feed (optional)
+
+---
+
+## 🧱 Tech Stack
 
 ### Frontend
-- React.js
-- Leaflet/MapBox for mapping
-- Material UI/Tailwind CSS for UI components
+- **React.js**
+- **Leaflet** / **MapBox** – Mapping & geolocation
+- **Material UI** / **Tailwind CSS** – UI styling
 
 ### Backend
-- Node.js with Express
-- API integration with NASA EONET, OpenStreetMap
+- **Node.js** with **Express**
+- API integration for real-time data
 
-### APIs
-- NASA EONET (Earth Observatory Natural Event Tracker)
-- NASA Earth API for satellite imagery
-- OpenStreetMap for geolocation and mapping
-- (Optional) ReliefWeb API for humanitarian data
+---
 
-## Development Setup
+## 🔌 APIs Used
+
+| API | Purpose |
+| --- | ------- |
+| [NASA EONET](https://eonet.gsfc.nasa.gov/docs/v2.1) | Real-time natural event tracking |
+| [NASA Earth API](https://api.nasa.gov/) | Satellite imagery |
+| [OpenStreetMap](https://wiki.openstreetmap.org/wiki/API_v0.6) | Geolocation and navigation |
+| [ReliefWeb API](https://reliefweb.int/help/api) | Humanitarian response data |
+| [Google Places API](https://developers.google.com/maps/documentation/places/web-service/overview) | Emergency services & hospitals |
+| [Photon](https://photon.komoot.io/) | Geocoding |
+| [HERE Maps API](https://www.here.com/developer/rest-apis) | Map services and routing |
+
+---
+
+## 🛠️ Setup Instructions
 
 ### Prerequisites
+
 - Node.js (v16+)
 - npm or yarn
-- API keys (see API Registration section)
+- API keys (see [API Registration](#api-registration))
 
-### Installation
-1. Clone the repository
+### Installation Steps
+
+1. **Clone the repository**
+
    ```bash
    git clone https://github.com/yourusername/safe-route-app.git
    cd safe-route-app
@@ -66,44 +88,29 @@ An emergency application that helps users find safe zones, hospitals, and emerge
 
 ## API Registration
 
-This application requires API keys from:
-1. NASA API - Register at https://api.nasa.gov/
-2. MapBox (optional) - Register at https://www.mapbox.com/
-
-
-### Tech Stack & APIs:
-1. APIs:
-- OpenStreetMap (for geolocation & navigation).
-- NASA Disaster API (for real-time disaster alerts).
-- ReliefWeb API (for humanitarian response data).
-- Google Places API (for emergency services & hospitals).
-- Hosting: Vercel/Netlify (Frontend), Firebase/AWS (Backend).
-
-### API's :
-1. NASA - https://api.nasa.gov/
-- [Link 1](https://worldview.earthdata.nasa.gov/?v=72.90204749683377,19.086367401115417,73.09423884362047,19.17175059691467&l=Reference_Labels_15m,Reference_Features_15m,Coastlines_15m,HLS_L30_Nadir_BRDF_Adjusted_Reflectance,Land_Water_Map&lg=true&l1=Reference_Labels_15m,Reference_Features_15m,Coastlines_15m,MODIS_Aqua_Cloud_Top_Pressure_Day&lg1=true&ca=false&cv=46&s=79.4433,23.3794&t=2023-04-30-T00%3A00%3A00Z&t1=2025-04-04-T05%3A56%3A43Z)
-- [EONET}(https://eonet.gsfc.nasa.gov/docs/v2.1)
-2. ReliefWeb - https://reliefweb.int/help/api
-3. OpenStreetMap - https://wiki.openstreetmap.org/wiki/API_v0.6
-4. https://photon.komoot.io/
-5. https://www.here.com/developer/rest-apis
+To run this application, obtain API keys from the following services:
+1. NASA API - [Register](https://api.nasa.gov/)
+2. MapBox (optional) - [Register](https://www.mapbox.com/)
 
 ## Project Roadmap
 
-- [x] Project setup and planning
+- [x] Initial project setup
 - [x] Basic map implementation
-- [x] NASA API integration
-- [x] Safe route algorithm implementation
-- [ ] User interface development
-- [ ] Testing and optimization
+- [x] NASA EONET API integration
+- [x] Safe route algorithm
+- [ ] UI/UX development
+- [ ] Testing and performance optimization
 - [ ] Documentation and deployment
 
-## OTP Test
-Number - 6789065432
-OTP    - 890765
+## Test Credentials (for OTP module)
+
+- Phone Number: 6789065432
+- OTP: 890765
 
 ## Contributing
-Instructions for contributing to the project.
+
+We welcome contributions from the community! Please fork the repo, make your changes, and submit a pull request. Ensure code is well-documented and tested.
 
 ## License
-MIT License
+
+This project is licensed under the MIT License.
