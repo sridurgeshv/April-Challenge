@@ -99,7 +99,7 @@ const HomePage = () => {
             <div className="ers-error">
               <div className="ers-error-icon">⚠️</div>
               <p>{error}</p>
-              <button className="ers-retry-button">Retry</button>
+              <button className="ers-retry-button" onClick={() => window.location.reload()}>Retry</button>
             </div>
           ) : alerts.length > 0 ? (
             <div className="ers-alerts-container">
