@@ -4,7 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 require('dotenv').config();
-const axios = require('axios'); // Add axios
+const axios = require('axios');
 const mongoose = require('mongoose');
 
 const app = express();
@@ -49,6 +49,7 @@ app.get('/api/disaster-alerts', async (req, res) => {
 app.use('/api/register', require('./routes/register'));
 app.use('/api/disasters', require('./routes/disasters'));
 app.use('/api/emergency-contacts', require('./routes/emergencyContacts'));
+app.use('/api/emergency-numbers', require('./routes/emergencyNumbers')); // Add the new route
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
