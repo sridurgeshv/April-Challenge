@@ -1,9 +1,14 @@
-// WelcomePage.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import '../styles/WelcomePage.css';
+
+// Import GIF assets
+import ambulanceGif from '../assets/ambulance.gif';
+import fireVehicleGif from '../assets/firetruck.gif';
+import alertBoardGif from '../assets/alert.gif';
+import phoneMapGif from '../assets/map.gif';
 
 const WelcomePage = () => {
   const [showRegister, setShowRegister] = useState(false);
@@ -12,15 +17,25 @@ const WelcomePage = () => {
   const [otp, setOtp] = useState('');
   const [message, setMessage] = useState('');
   const [confirmationResult, setConfirmationResult] = useState(null);
+  const [animateTitle, setAnimateTitle] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // Start title animation after component mount
+    const titleInterval = setInterval(() => {
+      setAnimateTitle(prev => !prev);
+    }, 3000);
+    
+    return () => clearInterval(titleInterval);
+  }, []);
+
   const setUpRecaptcha = () => {
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+    window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
       'size': 'invisible',
       'callback': (response) => {
         // reCAPTCHA solved, allow signInWithPhoneNumber.
       }
-    });
+    }, auth);
   };
 
   const handleSendOTP = async (e) => {
@@ -61,56 +76,35 @@ const WelcomePage = () => {
 
   return (
     <div className="welcome-page">
-      <div className="emergency-icons">
-        <div className="icon-item"><i className="fas fa-ambulance"></i></div>
-        <div className="icon-item"><i className="fas fa-fire-extinguisher"></i></div>
-        <div className="icon-item"><i className="fas fa-first-aid"></i></div>
-        <div className="icon-item"><i className="fas fa-exclamation-triangle"></i></div>
-        <div className="icon-item"><i className="fas fa-phone-alt"></i></div>
-        <div className="icon-item"><i className="fas fa-map-marked-alt"></i></div>
-      </div>
-      
-      <div className="welcome-content">
-        <div className="logo">
-          <div className="logo-icon">SR</div>
+      <div className="collage-container">
+        {/* Top left - Ambulance GIF */}
+        <div className="collage-item item-1">
+          <img src={ambulanceGif} alt="Ambulance emergency vehicle" />
         </div>
         
-        <h1>Welcome to SafeRoute</h1>
-        <p className="tagline">Your personal disaster response companion</p>
-        
-        <div className="features">
-          <div className="feature">
-            <div className="feature-icon">
-              <i className="fas fa-location-arrow"></i>
-            </div>
-            <h3>Real-time Alerts</h3>
-            <p>Get instant notifications about emergencies near you</p>
-          </div>
-          
-          <div className="feature">
-            <div className="feature-icon">
-              <i className="fas fa-route"></i>
-            </div>
-            <h3>Safe Navigation</h3>
-            <p>Find the safest routes during disaster situations</p>
-          </div>
-          
-          <div className="feature">
-            <div className="feature-icon">
-              <i className="fas fa-hands-helping"></i>
-            </div>
-            <h3>Emergency Resources</h3>
-            <p>Access vital information and emergency contacts</p>
-          </div>
+        {/* Top right - Fire Vehicle GIF */}
+        <div className="collage-item item-2">
+          <img src={fireVehicleGif} alt="Fire emergency vehicle" />
         </div>
         
-        <button className="login-btn" onClick={() => setShowRegister(true)}>
-          <i className="fas fa-user-shield"></i> Login with Mobile
-        </button>
+        {/* Center - Login button */}
+        <div className="collage-item center-item">
+          <div className={`title-container ${animateTitle ? 'pulse' : ''}`}>
+            <h1 className="dynamic-title">SafeRoute</h1>
+          </div>
+          <button className="login-btn" onClick={() => setShowRegister(true)}>
+            <i className="fas fa-user-shield"></i> Login
+          </button>
+        </div>
         
-        <div className="emergency-tips">
-          <h4>Did you know?</h4>
-          <p>Having an emergency plan can increase your chances of safety by up to 70% during disasters.</p>
+        {/* Bottom left - Alert Board GIF */}
+        <div className="collage-item item-3">
+          <img src={alertBoardGif} alt="Emergency alert board" />
+        </div>
+        
+        {/* Bottom right - Phone Map GIF */}
+        <div className="collage-item item-4">
+          <img src={phoneMapGif} alt="Phone with emergency maps" />
         </div>
       </div>
 
