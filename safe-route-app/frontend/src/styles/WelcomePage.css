@@ -31,7 +31,7 @@
 }
 
 .collage-item img {
-  width: 100%;
+  width: 85%;
   height: 100%;
   object-fit: cover;
 }
