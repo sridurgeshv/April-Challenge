@@ -6,122 +6,84 @@ const EmergencyPage = () => {
   const [emergencyType, setEmergencyType] = useState('');
   const [description, setDescription] = useState('');
   const [emergencyNumbers, setEmergencyNumbers] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [countryCode, setCountryCode] = useState(null);
   const navigate = useNavigate();
 
+  // Fetch emergency numbers based on user's location when component mounts
   useEffect(() => {
-    // Get user's location
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        position => {
-          const { latitude, longitude } = position.coords;
-          // Get country from coordinates
-          getCountryFromCoordinates(latitude, longitude);
-        },
-        err => {
-          setError('Unable to retrieve your location. Showing default emergency numbers.');
-          setLoading(false);
+    const fetchEmergencyNumbers = async () => {
+      try {
+        // Step 1: Get country code from IP geolocation API
+        const ipResponse = await fetch('http://localhost:5000/api/ip-location');
+        if (!ipResponse.ok) {
+          throw new Error('Failed to fetch location data');
         }
-      );
-    } else {
-      setError('Geolocation is not supported by your browser. Showing default emergency numbers.');
-      setLoading(false);
-    }
-  }, []);
+        const ipData = await ipResponse.json();
+        const countryCode = ipData.countryCode; // 
 
-  const getCountryFromCoordinates = async (latitude, longitude) => {
-    try {
-      // Using a reverse geocoding service to get country code from coordinates
-      const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
-      const data = await response.json();
-      
-      if (data && data.countryCode) {
-        setCountryCode(data.countryCode.toLowerCase());
-        fetchEmergencyNumbers(data.countryCode.toLowerCase());
-      } else {
-        throw new Error('Unable to determine country from coordinates');
+        // Step 2: Fetch emergency numbers using the country code via proxy
+        const emergencyResponse = await fetch(`http://localhost:5000/api/country/${countryCode}`);
+        if (!emergencyResponse.ok) {
+          throw new Error('Failed to fetch emergency numbers');
+        }
+        const emergencyData = await emergencyResponse.json();
+        setEmergencyNumbers(emergencyData.data); // Store only the "data" object
+      } catch (err) {
+        setError(err.message);
       }
-    } catch (err) {
-      setError('Error determining your location. Showing default emergency numbers.');
-      setLoading(false);
-    }
-  };
+    };
 
-  const fetchEmergencyNumbers = async (countryCode) => {
-    try {
-      // Fetch emergency numbers for the user's country
-      const response = await fetch(`/api/emergency-numbers/${countryCode}`);
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch emergency numbers');
-      }
-      
-      const data = await response.json();
-      setEmergencyNumbers(data);
-      setLoading(false);
-    } catch (err) {
-      setError('Error fetching emergency numbers. Showing default emergency numbers.');
-      setLoading(false);
-    }
-  };
+    fetchEmergencyNumbers();
+  }, []); // Empty dependency array means it runs once on mount
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // In a real app, this would send data to emergency services
     alert(`Emergency reported! Type: ${emergencyType}`);
     navigate('/');
   };
 
-  // Render emergency numbers based on location data
+  // Render emergency contacts based on fetched data
   const renderEmergencyContacts = () => {
-    if (loading) {
-      return <p>Loading emergency contacts for your location...</p>;
+    if (!emergencyNumbers) {
+      return <p>Loading emergency numbers...</p>;
     }
-
-    if (error || !emergencyNumbers) {
-      // Default US numbers if we can't get location-specific ones
-      return (
-        <ul>
-          <li>Police: 921</li>
-          <li>Fire Department: 911</li>
-          <li>Ambulance: 911</li>
-          <li>Disaster Helpline: 1-800-123-4567</li>
-        </ul>
-      );
+  
+    const numberToServices = {};
+    const services = ['ambulance', 'fire', 'police', 'dispatch'];
+  
+    services.forEach((service) => {
+      if (
+        emergencyNumbers[service] &&
+        emergencyNumbers[service].all?.length > 0 &&
+        emergencyNumbers[service].all[0] !== ''
+      ) {
+        const number = emergencyNumbers[service].all[0];
+        if (!numberToServices[number]) {
+          numberToServices[number] = [];
+        }
+        numberToServices[number].push(service.charAt(0).toUpperCase() + service.slice(1));
+      }
+    });
+  
+    const countryName = emergencyNumbers.country?.name || 'your country';
+    if (Object.keys(numberToServices).length === 0) {
+      return <p>No emergency numbers available for {countryName}.</p>;
     }
-
+  
     return (
-      <ul>
-        {emergencyNumbers.data.police.all && emergencyNumbers.data.police.all[0] && (
-          <li>Police: {emergencyNumbers.data.police.all[0]}</li>
-        )}
-        
-        {emergencyNumbers.data.fire.all && emergencyNumbers.data.fire.all[0] && (
-          <li>Fire Department: {emergencyNumbers.data.fire.all[0]}</li>
-        )}
-        
-        {emergencyNumbers.data.ambulance.all && emergencyNumbers.data.ambulance.all[0] && (
-          <li>Ambulance: {emergencyNumbers.data.ambulance.all[0]}</li>
-        )}
-        
-        {emergencyNumbers.data.dispatch.all && emergencyNumbers.data.dispatch.all[0] && (
-          <li>Emergency Dispatch: {emergencyNumbers.data.dispatch.all[0]}</li>
-        )}
-        
-        {(!emergencyNumbers.data.police.all || !emergencyNumbers.data.police.all[0]) && 
-         (!emergencyNumbers.data.fire.all || !emergencyNumbers.data.fire.all[0]) && 
-         (!emergencyNumbers.data.ambulance.all || !emergencyNumbers.data.ambulance.all[0]) && 
-         emergencyNumbers.data.dispatch.all && emergencyNumbers.data.dispatch.all[0] && (
-          <li>General Emergency: {emergencyNumbers.data.dispatch.all[0]}</li>
-        )}
-        
-        <li>International Emergency: 112</li>
-      </ul>
+      <>
+        <p>Emergency numbers for {countryName}:</p>
+        <ul>
+          {Object.entries(numberToServices).map(([number, services]) => (
+            <li key={number}>
+              {services.join(', ')}: {number}
+            </li>
+          ))}
+        </ul>
+      </>
     );
   };
-
+  
   return (
     <div className="emergency-page">
       <h2>Emergency Assistance</h2>
@@ -129,8 +91,8 @@ const EmergencyPage = () => {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Emergency Type:</label>
-            <select 
-              value={emergencyType} 
+            <select
+              value={emergencyType}
               onChange={(e) => setEmergencyType(e.target.value)}
               required
             >
@@ -157,7 +119,7 @@ const EmergencyPage = () => {
         </form>
       </div>
       <div className="emergency-contacts">
-        <h3>Emergency Contacts {countryCode && `for ${countryCode.toUpperCase()}`}</h3>
+        <h3>Emergency Contacts</h3>
         {renderEmergencyContacts()}
       </div>
     </div>
