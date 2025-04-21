@@ -1,30 +1,35 @@
 # SafeRoute: Disaster Response & Evacuation Assistant
 
-**SafeRoute** is an emergency response application designed to assist users during natural disasters. It enables real-time location tracking, disaster alert integration, and safe route navigation to nearby shelters, hospitals, and emergency services.
+**SafeRoute** is a comprehensive emergency response platform built to guide users during natural disasters. It offers real-time geolocation, dynamic disaster alerts, and safe navigation to shelters and critical services — all tailored for the user’s specific location.
 
 ---
 
 ## 🧭 Overview
 
-SafeRoute leverages real-time geolocation and disaster data to:
+SafeRoute utilizes real-time geospatial data and global disaster feeds to help users stay informed and make fast, safe decisions. Key capabilities include:
 
-- Detect user location or accept manual input
-- Display ongoing disasters from trusted data sources
-- Identify nearby shelters and hospitals
-- Navigate users through the safest possible routes
-- Provide emergency contact details
-- Allow users to report unsafe areas or request help
+- Automatic location detection or manual input
+
+- Live updates on natural disasters from reliable data sources
+
+- Discovery of nearby shelters, hospitals, and emergency facilities
+
+- Navigation through the safest available routes, avoiding blocked or hazardous areas
+
+- Location-based emergency contact information
+
+- User-generated hazard reporting and SOS requests
 
 ---
 
-## 🚀 Features
+## 🚀  Key Features
 
-- 🔴 Real-time disaster alerts and visualization
-- 🛑 Safe zone and shelter locator
-- 🧭 Navigation with blocked road and hazard avoidance
-- 📞 Emergency contacts: fire stations, hospitals, NGOs
-- 📡 Offline support during connectivity issues
-- 📢 User-reported hazard feed (optional)
+- 🔴 *Live Disaster Alerts*: Integrates with trusted sources for timely disaster notifications.
+- 🧭 *Safe Navigation*: Suggests optimal evacuation routes with hazard avoidance.
+- 🛑 *Shelter & Resource Locator*: Identifies nearby shelters, medical facilities, and aid centers.
+- 📞 *Localized Emergency Contacts*: A standout feature — SafeRoute detects the user’s region and dynamically presents localized emergency numbers (police, fire, ambulance). Whether the user is in India, the U.S., or any other part of the world, they receive accurate, region-specific contact details for critical services.
+- 📡 *Offline Functionality*: Provides support during connectivity disruptions.
+- 📢 *User Reports*: Users can flag danger zones or request help, visible to other users and authorities.
 
 ---
 
@@ -32,12 +37,12 @@ SafeRoute leverages real-time geolocation and disaster data to:
 
 ### Frontend
 - **React.js**
-- **Leaflet** / **MapBox** – Mapping & geolocation
-- **Material UI** / **Tailwind CSS** – UI styling
+- **Leaflet** / **MapBox** – Interactive maps and real-time geolocation
+- **Material UI** / **Tailwind CSS** – Responsive and modern UI components
 
 ### Backend
 - **Node.js** with **Express**
-- API integration for real-time data
+- RESTful API integration for external data sources and internal processing
 
 ---
 
@@ -52,7 +57,7 @@ SafeRoute leverages real-time geolocation and disaster data to:
 | [Google Places API](https://developers.google.com/maps/documentation/places/web-service/overview) | Emergency services & hospitals |
 | [Photon](https://photon.komoot.io/) | Geocoding |
 | [HERE Maps API](https://www.here.com/developer/rest-apis) | Map services and routing |
-
+| [Regional Emergency Directory API (Custom Implementation)]() | Provides country/region-specific emergency contacts based on user location |
 ---
 
 ## 🛠️ Setup Instructions
@@ -92,6 +97,11 @@ To run this application, obtain API keys from the following services:
 1. NASA API - [Register](https://api.nasa.gov/)
 2. MapBox (optional) - [Register](https://www.mapbox.com/)
 
+## Test Credentials (for OTP module)
+
+- Phone Number: 6789065432
+- OTP: 890765
+
 ## Project Roadmap
 
 - [x] Initial project setup
@@ -102,14 +112,14 @@ To run this application, obtain API keys from the following services:
 - [ ] Testing and performance optimization
 - [ ] Documentation and deployment
 
-## Test Credentials (for OTP module)
-
-- Phone Number: 6789065432
-- OTP: 890765
-
 ## Contributing
 
-We welcome contributions from the community! Please fork the repo, make your changes, and submit a pull request. Ensure code is well-documented and tested.
+We encourage community contributions. If you'd like to contribute:
+
+1. Fork the repository
+2. Create a new branch for your feature or fix
+3. Ensure your code is clean, tested, and documented
+4. Submit a pull request
 
 ## License
 
