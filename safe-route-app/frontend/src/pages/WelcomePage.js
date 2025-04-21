@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged } from "firebase/auth";
 import '../styles/WelcomePage.css';
+import { useAuth } from '../contexts/AuthContext';
 
 import ambulanceGif from '../assets/ambulance.gif';
 import fireVehicleGif from '../assets/firetruck.gif';
@@ -17,6 +18,14 @@ const WelcomePage = () => {
   const [message, setMessage] = useState('');
   const [confirmationResult, setConfirmationResult] = useState(null);
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
+
+  // Redirect if user is already authenticated
+  useEffect(() => {
+    if (currentUser) {
+      navigate('/home');
+    }
+  }, [currentUser, navigate]);
 
   // Set up RecaptchaVerifier when the register panel is shown
   useEffect(() => {
@@ -74,10 +83,9 @@ const WelcomePage = () => {
     if (!otp) return setMessage('Please enter the OTP.');
 
     try {
-      const result = await confirmationResult.confirm(otp);
-      console.log('User  signed in:', result.user);
+      await confirmationResult.confirm(otp);
       setMessage('OTP verified successfully!');
-      setTimeout(() => navigate('/home'), 2000);
+      // No need for timeout and navigate here as the AuthContext will handle the redirection
     } catch (error) {
       console.error('Verification error:', error);
       setMessage(`Error verifying OTP: ${error.message}`);
