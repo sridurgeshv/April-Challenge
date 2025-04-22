@@ -257,9 +257,13 @@ const MapPage = () => {
         <div className="header-container">
           <h2>Disaster Safety Map</h2>
           <div className="profile-container" ref={dropdownRef}>
-            <div className="profile-icon" onClick={toggleProfileDropdown}>
-              <span className="profile-icon-inner">👤</span>
-            </div>
+          <div className="profile-icon" onClick={toggleProfileDropdown}>
+            <img 
+              src="https://cdn-icons-png.flaticon.com/128/9131/9131646.png" 
+              alt="Profile Icon" 
+              className="profile-icon-inner" 
+            />
+          </div>
             {showProfileDropdown && (
               <div className="profile-dropdown">
                 <button onClick={handleProfileClick}>Profile</button>
