@@ -26,7 +26,7 @@
 
 .emergency-page h2 {
   font-size: 2.8rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   color: #e63946;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -34,98 +34,144 @@
   animation: emergencyPulse 2s infinite, slideInTop 0.7s ease-out;
 }
 
-.emergency-form {
-  background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 12px;
+/* Emergency Options Grid */
+.emergency-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
   width: 100%;
-  max-width: 500px;
-  box-shadow: 0 10px 25px rgba(230, 57, 70, 0.15);
+  max-width: 800px;
+  margin-bottom: 3rem;
   position: relative;
   z-index: 1;
-  border: 1px solid rgba(230, 57, 70, 0.1);
-  animation: zoomIn 0.8s ease-out;
 }
 
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-label {
-  display: block;
-  margin-bottom: 0.7rem;
-  font-weight: 600;
-  font-size: 1.1rem;
-  color: #e63946;
-}
-
-select,
-textarea {
-  width: 100%;
-  padding: 0.9rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-family: inherit;
-  resize: vertical;
-  background-color: #f8f9fa;
-  color: #333;
-  transition: all 0.3s ease;
-}
-
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: #e63946;
-  box-shadow: 0 0 6px rgba(230, 57, 70, 0.3);
-}
-
-textarea {
-  min-height: 120px;
-}
-
-.emergency-button {
-  width: 100%;
-  padding: 1rem;
-  font-size: 1.2rem;
-  background: linear-gradient(135deg, #e63946 0%, #ff4d6d 100%);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
+.emergency-card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
   cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  box-shadow: 0 4px 10px rgba(230, 57, 70, 0.3);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   position: relative;
   overflow: hidden;
+  border-left: 5px solid transparent;
 }
 
-.emergency-button::after {
+.emergency-card::before {
   content: '';
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: rgba(255, 255, 255, 0.2);
-  transform: rotate(45deg);
-  animation: buttonGlow 3s infinite;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease-out;
 }
 
-.emergency-button:hover {
-  background: linear-gradient(135deg, #d62839 0%, #e63946 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(230, 57, 70, 0.4);
+.emergency-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 }
 
-.emergency-button:active {
-  transform: translateY(1px);
+.emergency-card:hover::before {
+  transform: translateX(0);
+}
+
+.emergency-card.medical {
+  border-left-color: #e74c3c;
+}
+
+.emergency-card.fire {
+  border-left-color: #ff8c00;
+}
+
+.emergency-card.police {
+  border-left-color: #3498db;
+}
+
+.emergency-card.disaster {
+  border-left-color: #9b59b6;
+}
+
+.emergency-card.active {
+  transform: scale(1.05);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  animation: cardPulse 1.5s infinite;
+}
+
+.card-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.emergency-card:hover .card-icon {
+  transform: scale(1.1);
+}
+
+.emergency-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+
+.emergency-card p {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+/* Emergency Alert */
+.emergency-alert {
+  width: 100%;
+  max-width: 500px;
+  background-color: #e63946;
+  color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 1;
+  animation: fadeInUp 0.5s ease-out;
+  box-shadow: 0 8px 20px rgba(230, 57, 70, 0.3);
+}
+
+.emergency-alert p {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.pulse-indicator {
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+  margin: 0 auto;
+  position: relative;
+}
+
+.pulse-indicator::before,
+.pulse-indicator::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.7);
+  transform: scale(0);
+  animation: ripple 1.5s infinite;
+}
+
+.pulse-indicator::after {
+  animation-delay: 0.3s;
 }
 
 .emergency-contacts {
-  margin-top: 3rem;
+  margin-top: 1rem;
   text-align: center;
   animation: fadeIn 1.5s ease-in;
   position: relative;
@@ -135,6 +181,8 @@ textarea {
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(230, 57, 70, 0.1);
+  width: 100%;
+  max-width: 500px;
 }
 
 .emergency-contacts h3 {
@@ -146,6 +194,11 @@ textarea {
 .emergency-contacts ul {
   list-style: none;
   padding: 0;
+}
+
+.emergency-numbers-text {
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 
 .emergency-contacts li {
@@ -173,10 +226,42 @@ textarea {
   animation: pulseDot 2s infinite;
 }
 
+.emergency-number {
+  color: #e63946;
+  font-weight: 700;
+  text-decoration: none;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.emergency-number::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #e63946;
+  transition: width 0.3s ease;
+}
+
+.emergency-number:hover {
+  color: #d62839;
+}
+
+.emergency-number:hover::after {
+  width: 100%;
+}
+
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes slideInTop {
@@ -187,11 +272,6 @@ textarea {
 @keyframes slideInRight {
   from { transform: translateX(-20px); opacity: 0; }
   to   { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes zoomIn {
-  from { transform: scale(0.9); opacity: 0; }
-  to   { transform: scale(1); opacity: 1; }
 }
 
 @keyframes pulse {
@@ -206,10 +286,10 @@ textarea {
   100% { color: #e63946; }
 }
 
-@keyframes buttonGlow {
-  0% { transform: rotate(45deg) translateX(-100%); }
-  50% { transform: rotate(45deg) translateX(100%); }
-  100% { transform: rotate(45deg) translateX(100%); }
+@keyframes cardPulse {
+  0% { box-shadow: 0 15px 30px rgba(230, 57, 70, 0.3); }
+  50% { box-shadow: 0 15px 30px rgba(230, 57, 70, 0.6); }
+  100% { box-shadow: 0 15px 30px rgba(230, 57, 70, 0.3); }
 }
 
 @keyframes pulseDot {
@@ -218,14 +298,19 @@ textarea {
   100% { opacity: 1; transform: scale(1); }
 }
 
+@keyframes ripple {
+  from { transform: scale(0); opacity: 1; }
+  to { transform: scale(3); opacity: 0; }
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  h2 {
+  .emergency-page h2 {
     font-size: 2.2rem;
   }
   
-  .emergency-form {
-    padding: 1.5rem;
+  .emergency-options {
+    grid-template-columns: 1fr;
   }
   
   .emergency-contacts {
@@ -234,12 +319,12 @@ textarea {
 }
 
 @media (max-width: 480px) {
-  h2 {
+  .emergency-page h2 {
     font-size: 1.8rem;
   }
   
-  .emergency-button {
-    padding: 0.8rem;
+  .emergency-card {
+    padding: 1rem;
   }
   
   .emergency-contacts li {

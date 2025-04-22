@@ -3,10 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/EmergencyPage.css';
 
 const EmergencyPage = () => {
-  const [emergencyType, setEmergencyType] = useState('');
-  const [description, setDescription] = useState('');
   const [emergencyNumbers, setEmergencyNumbers] = useState(null);
   const [error, setError] = useState(null);
+  const [activeCard, setActiveCard] = useState(null);
   const navigate = useNavigate();
 
   // Fetch emergency numbers based on user's location when component mounts
@@ -19,7 +18,7 @@ const EmergencyPage = () => {
           throw new Error('Failed to fetch location data');
         }
         const ipData = await ipResponse.json();
-        const countryCode = ipData.countryCode; // 
+        const countryCode = ipData.countryCode;
 
         // Step 2: Fetch emergency numbers using the country code via proxy
         const emergencyResponse = await fetch(`http://localhost:5000/api/country/${countryCode}`);
@@ -36,10 +35,13 @@ const EmergencyPage = () => {
     fetchEmergencyNumbers();
   }, []); // Empty dependency array means it runs once on mount
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert(`Emergency reported! Type: ${emergencyType}`);
-    navigate('/');
+  // Handle emergency card click
+  const handleEmergencyCardClick = (type) => {
+    setActiveCard(type);
+    setTimeout(() => {
+      // Show info for 2 seconds then navigate home
+      setTimeout(() => navigate('/'), 2000);
+    }, 500);
   };
 
   // Render emergency contacts based on fetched data
@@ -72,11 +74,11 @@ const EmergencyPage = () => {
   
     return (
       <>
-        <p>Emergency numbers for {countryName}:</p>
+        <p className="emergency-numbers-text">Emergency numbers for {countryName}:</p>
         <ul>
           {Object.entries(numberToServices).map(([number, services]) => (
             <li key={number}>
-              {services.join(', ')}: {number}
+              {services.join(', ')}: <a href={`tel:${number}`} className="emergency-number">{number}</a>
             </li>
           ))}
         </ul>
@@ -87,37 +89,52 @@ const EmergencyPage = () => {
   return (
     <div className="emergency-page">
       <h2>Emergency Assistance</h2>
-      <div className="emergency-form">
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Emergency Type:</label>
-            <select
-              value={emergencyType}
-              onChange={(e) => setEmergencyType(e.target.value)}
-              required
-            >
-              <option value="">Select type</option>
-              <option value="medical">Medical Emergency</option>
-              <option value="fire">Fire</option>
-              <option value="flood">Flood</option>
-              <option value="earthquake">Earthquake</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label>Description:</label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Provide details about the emergency"
-              required
-            />
-          </div>
-          <button type="submit" className="emergency-button">
-            Request Emergency Help
-          </button>
-        </form>
+      
+      <div className="emergency-options">
+        <div 
+          className={`emergency-card medical ${activeCard === 'medical' ? 'active' : ''}`}
+          onClick={() => handleEmergencyCardClick('medical')}
+        >
+          <div className="card-icon">🚑</div>
+          <h3>Medical</h3>
+          <p>For immediate medical assistance</p>
+        </div>
+        
+        <div 
+          className={`emergency-card fire ${activeCard === 'fire' ? 'active' : ''}`}
+          onClick={() => handleEmergencyCardClick('fire')}
+        >
+          <div className="card-icon">🔥</div>
+          <h3>Fire</h3>
+          <p>For fire emergencies</p>
+        </div>
+        
+        <div 
+          className={`emergency-card police ${activeCard === 'police' ? 'active' : ''}`}
+          onClick={() => handleEmergencyCardClick('police')}
+        >
+          <div className="card-icon">👮</div>
+          <h3>Police</h3>
+          <p>For security emergencies</p>
+        </div>
+        
+        <div 
+          className={`emergency-card disaster ${activeCard === 'disaster' ? 'active' : ''}`}
+          onClick={() => handleEmergencyCardClick('disaster')}
+        >
+          <div className="card-icon">🌊</div>
+          <h3>Natural Disaster</h3>
+          <p>For flood, earthquake or other disasters</p>
+        </div>
       </div>
+      
+      {activeCard && (
+        <div className="emergency-alert">
+          <p>Contacting emergency services for {activeCard} assistance...</p>
+          <div className="pulse-indicator"></div>
+        </div>
+      )}
+      
       <div className="emergency-contacts">
         <h3>Emergency Contacts</h3>
         {renderEmergencyContacts()}
