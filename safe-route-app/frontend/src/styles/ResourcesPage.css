@@ -1,0 +1,352 @@
+/* ResourcesPage.css */
+.resources-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .resources-hero {
+    height: 260px;
+    border-radius: 12px;
+    background-image: linear-gradient(to right, #3a7bd5, #00d2ff);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 30px;
+    margin-top: 20px;
+  }
+  
+  .resources-hero-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+  }
+  
+  .resources-hero-content {
+    position: relative;
+    z-index: 2;
+    color: #fff;
+    padding: 50px 40px;
+    max-width: 800px;
+  }
+  
+  .resources-title {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+  }
+  
+  .resources-subtitle {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+  
+  .resources-nav {
+    margin-bottom: 30px;
+    border-bottom: 1px solid #e6e6e6;
+  }
+  
+  .resources-nav-tabs {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  
+  .resources-nav-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .resources-tab {
+    padding: 15px 25px;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #666;
+    cursor: pointer;
+    white-space: nowrap;
+    position: relative;
+    transition: color 0.3s;
+  }
+  
+  .resources-tab:hover {
+    color: #3a7bd5;
+  }
+  
+  .resources-tab.active {
+    color: #3a7bd5;
+  }
+  
+  .resources-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #3a7bd5;
+  }
+  
+  .resources-content {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 50px;
+  }
+  
+  .resources-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+  
+  .resource-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    padding: 25px;
+  }
+  
+  .resource-card-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #333;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+  }
+  
+  .resource-list, .resource-steps {
+    padding-left: 20px;
+  }
+  
+  .resource-list-item, .resource-step-item {
+    margin-bottom: 12px;
+    line-height: 1.6;
+    color: #444;
+  }
+  
+  .resource-step-item {
+    padding-left: 10px;
+  }
+  
+  .resources-sidebar {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+  
+  .resources-downloads, .emergency-contacts {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    padding: 25px;
+  }
+  
+  .sidebar-title {
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+    color: #333;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+  }
+  
+  .download-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .download-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .download-item:last-child {
+    border-bottom: none;
+  }
+  
+  .download-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .download-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+  }
+  
+  .download-meta {
+    font-size: 0.85rem;
+    color: #777;
+  }
+  
+  .download-button {
+    padding: 6px 12px;
+    background-color: #3a7bd5;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+  }
+  
+  .download-button:hover {
+    background-color: #2c62aa;
+  }
+  
+  .contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .contact-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .contact-item:last-child {
+    border-bottom: none;
+  }
+  
+  .contact-icon {
+    font-size: 1.5rem;
+    margin-right: 15px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f7fa;
+    border-radius: 50%;
+  }
+  
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .contact-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+  }
+  
+  .contact-value {
+    font-size: 0.95rem;
+    color: #3a7bd5;
+    font-weight: 600;
+  }
+  
+  .resources-cta {
+    background-color: #f5f7fa;
+    border-radius: 12px;
+    padding: 40px;
+    margin-bottom: 50px;
+    text-align: center;
+  }
+  
+  .cta-title {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  .cta-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #555;
+    max-width: 700px;
+    margin: 0 auto 25px;
+  }
+  
+  .cta-button {
+    padding: 12px 30px;
+    background-color: #3a7bd5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .cta-button:hover {
+    background-color: #2c62aa;
+  }
+  
+  .resources-footer {
+    text-align: center;
+    padding: 30px 0;
+    color: #777;
+    font-size: 0.9rem;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 900px) {
+    .resources-content {
+      flex-direction: column;
+    }
+    
+    .resources-sidebar {
+      width: 100%;
+    }
+    
+    .resources-hero {
+      height: 220px;
+    }
+    
+    .resources-title {
+      font-size: 2rem;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .resources-hero {
+      height: 180px;
+    }
+    
+    .resources-hero-content {
+      padding: 30px 20px;
+    }
+    
+    .resources-title {
+      font-size: 1.7rem;
+    }
+    
+    .resources-subtitle {
+      font-size: 1rem;
+    }
+    
+    .resources-tab {
+      padding: 12px 15px;
+      font-size: 0.9rem;
+    }
+    
+    .cta-title {
+      font-size: 1.5rem;
+    }
+    
+    .cta-text {
+      font-size: 1rem;
+    }
+    
+    .resources-cta {
+      padding: 30px 20px;
+    }
+  }

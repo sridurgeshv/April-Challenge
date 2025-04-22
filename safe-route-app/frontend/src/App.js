@@ -7,6 +7,7 @@ import MapPage from './pages/MapPage';
 import ProfilePage from './pages/ProfilePage';
 import EmergencyPage from './pages/EmergencyPage';
 import ShelterDetails from './pages/ShelterDetails';
+import ResourcesPage from './pages/ResourcesPage';
 import './App.css';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/emergency" element={<EmergencyPage />} />
               <Route path="/shelter/:id" element={<ShelterDetails />} />
+              <Route path="/resources" element={<ResourcesPage />} />
             </Route>
           </Routes>
         </div>
