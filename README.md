@@ -1,7 +1,5 @@
 # SafeRoute: Disaster Response & Evacuation Assistant
 
-![SafeRoute Banner](https://via.placeholder.com/800x200?text=SafeRoute:+Disaster+Response+%26+Evacuation+Assistant)
-
 **SafeRoute** is a comprehensive emergency response platform built to guide users during natural disasters. It offers real-time geolocation, dynamic disaster alerts, and safe navigation to shelters and critical services — all tailored for the user’s specific location.
 
 ---
@@ -43,7 +41,7 @@ SafeRoute utilizes real-time geospatial data and global disaster feeds to help u
 
 ## 📱 User Interface & Experience
 
-![App Screenshots](https://via.placeholder.com/800x400?text=App+Interface+Screenshots)
+![App Screenshots](https://github.com/sridurgeshv/April-Challenge/blob/main/images/map.JPG)
 
 SafeRoute features an intuitive, panic-friendly interface designed to be used under stress:
 - Large, clear buttons for critical functions
