@@ -25,7 +25,6 @@ const EmergencyContacts = () => {
         console.error('Error fetching contacts:', err);
         setError('Failed to load emergency contacts');
         setLoading(false);
-        // Initialize with empty contacts array instead of showing error
         setContacts([]);
       }
     };
@@ -81,10 +80,10 @@ const EmergencyContacts = () => {
 
   const handleDeleteContact = async (id) => {
     try {
-      console.log('Deleting contact with ID:', id); // Debugging log
+      console.log('Deleting contact with ID:', id);
       const response = await axios.delete(`http://localhost:5000/api/emergency-contacts/${id}`);
       setContacts(contacts.filter(contact => contact._id !== id));
-      setError(null); // Clear any previous errors on success
+      setError(null);
     } catch (err) {
       console.error('Error deleting contact:', err.response ? err.response.data : err.message);
       setError(err.response?.data?.msg || 'Failed to delete contact');
@@ -115,11 +114,11 @@ const EmergencyContacts = () => {
       <div className="contacts__header">
         <h2 className="contacts__title">Emergency Contacts</h2>
         <p className="contacts__description">
-          These contacts will be notified during emergency situations
+          These contacts will be notified via Telegram during emergency situations
         </p>
       </div>
   
-      {error && <div className="contacts__error">{error}</div>} {/* Add error display */}
+      {error && <div className="contacts__error">{error}</div>}
   
       {contacts.length === 0 ? (
         <div className="contacts__empty">
@@ -135,7 +134,18 @@ const EmergencyContacts = () => {
                   <span className="contacts__relationship">{contact.relationship}</span>
                   <span className="contacts__phone">{contact.phoneNumber}</span>
                   <span className="contacts__blood">Blood: {contact.bloodGroup || 'Unknown'}</span>
+                  <span className="contacts__telegram">
+                    Telegram: {contact.telegramChatId ? 'Registered' : 'Not Registered'} 
+                    {contact.uniqueCode && !contact.telegramChatId && (
+                      <span> (Code: {contact.uniqueCode})</span>
+                    )}
+                  </span>
                 </div>
+                {contact.uniqueCode && !contact.telegramChatId && (
+                  <div className="contacts__telegram-instructions">
+                    <p>Please ask {contact.name} to start the Telegram bot @SafeRouteSOSBot and send the code <strong>{contact.uniqueCode}</strong> to enable emergency notifications.</p>
+                  </div>
+                )}
               </div>
               <button 
                 className="contacts__delete"
@@ -243,7 +253,7 @@ const EmergencyContacts = () => {
       
       {contacts.length > 0 && (
         <div className="contacts__note">
-          <p>Your emergency contacts will only be notified during actual emergencies.</p>
+          <p>Your emergency contacts will only be notified via Telegram during actual emergencies.</p>
         </div>
       )}
     </div>

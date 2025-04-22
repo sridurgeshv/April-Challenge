@@ -2,17 +2,17 @@ const axios = require('axios');
 const https = require('https');
 const retry = require('async-retry');
 
-const NASA_API_KEY = process.env.NASA_API_KEY || 'q8im2tVzRxHQlqvcCDul5w2kvUozSxhSwctV2jCH';
+const NASA_API_KEY = process.env.NASA_API_KEY || 'L6NaIdweKP3qi9POmAkRz6Cyluvcjgci4pGXESlM';
 const EONET_BASE_URL = 'https://eonet.gsfc.nasa.gov/api/v3';
 
 // Create configured axios instance
 const nasaApi = axios.create({
   baseURL: EONET_BASE_URL,
-  timeout: 15000, // Increased timeout to 15 seconds
+  timeout: 20000, // Increased timeout to 15 seconds
   httpsAgent: new https.Agent({ 
     keepAlive: true,
     rejectUnauthorized: true,
-    timeout: 15000
+    timeout: 20000
   }),
   headers: {
     'Accept': 'application/json',
@@ -27,6 +27,24 @@ let cachedDisasters = {
 };
 
 const getActiveDisasters = async (params = {}) => {
+
+  const cacheTTL = 60 * 60 * 1000; // 1 hour in milliseconds
+
+  // Serve cached data if it exists and is fresh
+  if (
+    cachedDisasters.lastUpdated &&
+    Date.now() - new Date(cachedDisasters.lastUpdated).getTime() < cacheTTL
+  ) {
+    console.log('Serving cached disaster data');
+    return {
+      events: cachedDisasters.events,
+      lastUpdated: cachedDisasters.lastUpdated,
+      count: cachedDisasters.events.length,
+      isGlobal: !(params.lat && params.lng),
+      isCached: true,
+    };
+  } 
+
   try {
     const { days = 30, status = 'open', category, bbox, lat, lng, radius, limit } = params;
     
@@ -42,7 +60,7 @@ const getActiveDisasters = async (params = {}) => {
       queryParams.bbox = calculateBoundingBox(lat, lng, radius);
     }
 
-    if (NASA_API_KEY && NASA_API_KEY !== 'q8im2tVzRxHQlqvcCDul5w2kvUozSxhSwctV2jCH') {
+    if (NASA_API_KEY && NASA_API_KEY !== 'L6NaIdweKP3qi9POmAkRz6Cyluvcjgci4pGXESlM') {
       queryParams.api_key = NASA_API_KEY;
     }
 
@@ -54,11 +72,10 @@ const getActiveDisasters = async (params = {}) => {
           return res;
         } catch (error) {
           if (error.response && error.response.status >= 500) {
-            // Don't retry for 5xx errors
             bail(new Error('NASA API server error'));
             return;
           }
-          throw error; // Retry for other errors
+          throw error;
         }
       },
       {
@@ -67,7 +84,7 @@ const getActiveDisasters = async (params = {}) => {
         maxTimeout: 5000,
         onRetry: (error) => {
           console.log(`Retrying NASA API call after error: ${error.message}`);
-        }
+        },
       }
     );
 
@@ -75,37 +92,37 @@ const getActiveDisasters = async (params = {}) => {
       throw new Error('Invalid response format from NASA API');
     }
 
-    // Update cache
+    // Update cache with fresh data
     cachedDisasters = {
       events: response.data.events,
-      lastUpdated: new Date().toISOString()
+      lastUpdated: new Date().toISOString(),
     };
 
     return {
-      ...cachedDisasters,
+      events: response.data.events,
+      lastUpdated: cachedDisasters.lastUpdated,
       count: response.data.events.length,
-      isGlobal: !(lat && lng)
+      isGlobal: !(params.lat && params.lng),
     };
-
   } catch (error) {
     console.error('NASA API Error:', {
       message: error.message,
       code: error.code,
-      stack: error.stack
+      stack: error.stack,
     });
 
-    // Return cached data if available
+    // Return cached data if available, even if slightly old
     if (cachedDisasters.events.length > 0) {
-      console.log('Returning cached disaster data');
+      console.log('Returning cached disaster data after failure');
       return {
-        ...cachedDisasters,
+        events: cachedDisasters.events,
+        lastUpdated: cachedDisasters.lastUpdated,
         count: cachedDisasters.events.length,
-        isGlobal: !(lat && lng),
-        isCached: true
+        isGlobal: !(params.lat && params.lng),
+        isCached: true,
       };
     }
 
-    // Fallback to sample data if no cache
     console.log('Returning fallback disaster data');
     return getFallbackDisasterData(params);
   }

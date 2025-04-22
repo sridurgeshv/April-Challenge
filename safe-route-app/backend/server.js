@@ -6,6 +6,8 @@ const morgan = require('morgan');
 require('dotenv').config();
 const axios = require('axios');
 const mongoose = require('mongoose');
+const TelegramBot = require('node-telegram-bot-api');
+const EmergencyContact = require('./models/EmergencyContact');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -16,6 +18,29 @@ mongoose.connect('mongodb+srv://ritika66:ritika12@cluster0.oaefvoz.mongodb.net/?
 })
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Could not connect to MongoDB', err));
+
+// Initialize Telegram Bot
+const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: true });
+
+// Handle incoming messages to register chat IDs
+bot.on('message', async (msg) => {
+  const chatId = msg.chat.id;
+  const text = msg.text;
+
+  try {
+    const contact = await EmergencyContact.findOne({ uniqueCode: text });
+    if (contact) {
+      contact.telegramChatId = chatId;
+      await contact.save();
+      bot.sendMessage(chatId, 'You have been registered as an emergency contact. You will receive notifications in case of emergency.');
+    } else {
+      bot.sendMessage(chatId, 'Invalid code. Please enter the correct code provided by the user.');
+    }
+  } catch (err) {
+    console.error('Error processing message:', err);
+    bot.sendMessage(chatId, 'An error occurred. Please try again later.');
+  }
+});
 
 // CORS config
 app.use(cors({
@@ -60,7 +85,7 @@ app.get('/api/country/:code', async (req, res) => {
   }
 });
 
-// NEW: IP location proxy
+// IP location proxy
 app.get('/api/ip-location', async (req, res) => {
   try {
     const response = await axios.get('http://ip-api.com/json');
@@ -75,6 +100,7 @@ app.get('/api/ip-location', async (req, res) => {
 app.use('/api/register', require('./routes/register'));
 app.use('/api/disasters', require('./routes/disasters'));
 app.use('/api/emergency-contacts', require('./routes/emergencyContacts'));
+app.use('/api/sos', require('./routes/sos'));
 
 // Error handler
 app.use((err, req, res, next) => {

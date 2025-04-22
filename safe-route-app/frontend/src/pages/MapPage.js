@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
+import axios from 'axios';
 import { fetchDisasters } from '../services/disasterService';
 import { getCurrentLocation } from '../services/locationService';
-import {fetchReliefWebReports} from '../services/reliefWebService';
+import { fetchReliefWebReports } from '../services/reliefWebService';
 import 'leaflet/dist/leaflet.css';
 import '../styles/MapPage.css';
 
@@ -24,7 +25,6 @@ const MapPage = () => {
   const [showPreparednessTips, setShowPreparednessTips] = useState(false);
   const [reliefWebReports, setReliefWebReports] = useState([]);
   const [showVerifiedReports, setShowVerifiedReports] = useState(true);
-
 
   const calculateBoundingBox = (lat, lng, radiusKm) => {
     const earthRadius = 6371;
@@ -90,7 +90,7 @@ const MapPage = () => {
             radius: 1000
           })
         ]);
-  
+
         setLocalDisasters(localData.events.filter(event => 
           new Date(event.geometry[0].date) >= sevenDaysAgo
         ));
@@ -100,23 +100,10 @@ const MapPage = () => {
         setShelters(realShelters);
         console.log('Fetched ReliefWeb Reports:', reliefData);
         
-        // Log reports with coordinates
         const reportsWithCoords = reliefData.filter(report => report.coordinates);
         console.log('Reports with coordinates:', reportsWithCoords);
         
-        // Temporarily include all reports to test rendering
-        setReliefWebReports(reliefData); // Comment out filter for now
-        /*
-        setReliefWebReports(reliefData.filter(report => 
-          report.coordinates && 
-          haversineDistance(
-            location.lat, 
-            location.lng,
-            report.coordinates[1],
-            report.coordinates[0]
-          ) <= 500
-        ));
-        */
+        setReliefWebReports(reliefData);
         setLoading(false);
       } catch (err) {
         setError(`Location Error: ${err.message}. Please ensure location services are enabled.`);
@@ -126,32 +113,29 @@ const MapPage = () => {
     
     loadData();
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowProfileDropdown(false);
+      }
+    };
   
-    // Close dropdown when clicking outside
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-          setShowProfileDropdown(false);
-        }
-      };
-    
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }, []);    
-  
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);    
+
   const toggleProfileDropdown = () => {
     setShowProfileDropdown(!showProfileDropdown);
   };
   
   const handleProfileClick = () => {
-    // Navigate to profile page
     window.location.href = '/profile';
   };
   
   const handleLogoutClick = () => {
-    // Navigate to home page
     window.location.href = '/';
   };
 
@@ -195,7 +179,7 @@ const MapPage = () => {
 
   const haversineDistance = (lat1, lon1, lat2, lon2) => {
     const toRad = (x) => (x * Math.PI) / 180;
-    const R = 6371; // Earth radius in km
+    const R = 6371;
     const dLat = toRad(lat2 - lat1);
     const dLon = toRad(lon2 - lon1);
     const a =
@@ -222,6 +206,30 @@ const MapPage = () => {
 
   const toggleLocationDetails = () => {
     setShowLocationDetails(!showLocationDetails);
+  };
+
+  const handleSOSClick = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/emergency-contacts');
+      const contacts = response.data;
+
+      if (contacts.length === 0) {
+        alert('No emergency contacts set. Please add contacts in the profile section.');
+        return;
+      }
+
+      const message = `SOS! Emergency situation. User's location: Lat ${userLocation.lat.toFixed(4)}, Lng ${userLocation.lng.toFixed(4)}. Please help!`;
+      const sosResponse = await axios.post('http://localhost:5000/api/sos/trigger', { message });
+
+      if (sosResponse.data.success) {
+        alert('SOS messages sent to emergency contacts via Telegram');
+      } else {
+        alert('Failed to send SOS messages');
+      }
+    } catch (error) {
+      console.error('Error triggering SOS:', error);
+      alert('Failed to send SOS messages');
+    }
   };
 
   if (loading) return <div className="loading">Loading safety data...</div>;
@@ -275,33 +283,33 @@ const MapPage = () => {
             {showGlobalDisasters ? 'Hide Global Disasters' : 'Show Global Disasters'}
           </button>
           <button 
-              className="btn tips-toggle"
-              onClick={() => setShowPreparednessTips(!showPreparednessTips)}
-            >
-              {showPreparednessTips ? 'Hide Tips' : 'Show Preparedness Tips'}
-            </button>
+            className="btn tips-toggle"
+            onClick={() => setShowPreparednessTips(!showPreparednessTips)}
+          >
+            {showPreparednessTips ? 'Hide Tips' : 'Show Preparedness Tips'}
+          </button>
         </div>
       </div>
       
       {!hasLocalDisasters && showPreparednessTips && (
-      <div className="preparedness-tips-panel">
-        <h3>Safety Preparedness Tips</h3>
-        <button 
-          className="close-tips-btn"
-          onClick={() => setShowPreparednessTips(false)}
-        >
-          ×
-        </button>
-        <ul>
-          {preparednessTips.map((tip, index) => (
-            <li key={index}>{tip}</li>
-          ))}
-        </ul>
-      </div>
-    )}    
+        <div className="preparedness-tips-panel">
+          <h3>Safety Preparedness Tips</h3>
+          <button 
+            className="close-tips-btn"
+            onClick={() => setShowPreparednessTips(false)}
+          >
+            ×
+          </button>
+          <ul>
+            {preparednessTips.map((tip, index) => (
+              <li key={index}>{tip}</li>
+            ))}
+          </ul>
+        </div>
+      )}    
 
       <div className="map-container">
-      <MapContainer
+        <MapContainer
           center={[userLocation.lat, userLocation.lng]}
           zoom={5}
           style={{ height: '100%', width: '100%' }}
@@ -355,7 +363,6 @@ const MapPage = () => {
             ))}
           </MarkerClusterGroup>
           
-          {/* Local disasters (always shown) */}
           {localDisasters.map(disaster => {
             const isRecent = Date.now() - new Date(disaster.geometry[0].date) < 24 * 60 * 60 * 1000;
             return (
@@ -376,7 +383,6 @@ const MapPage = () => {
             );
           })}
           
-          {/* Global disasters (toggleable) */}
           {showGlobalDisasters &&
             globalDisasters
               .filter(globalDis => !localDisasters.some(localDis => localDis.id === globalDis.id))
@@ -400,59 +406,59 @@ const MapPage = () => {
                   </Marker>
                 );
               })}
-              {showVerifiedReports && reliefWebReports.map(report => {
-  if (!report.coordinates) {
-    console.warn('Skipping marker for report without coordinates:', report); // Debug log
-    return null;
-  }
-  
-  console.log('Rendering report marker:', report); // Debug log
-  
-  return (
-    <Marker
-      key={`reliefweb-${report.id}`}
-      position={[report.coordinates[1], report.coordinates[0]]} // [lat, lon]
-      icon={new L.Icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34]
-      })}
-    >
-      <Popup>
-        <div className="verified-report-popup">
-          <h3>Verified Report: {report.title}</h3>
-          <p className="report-meta">
-            {report.type} • {report.country} • {new Date(report.date).toLocaleDateString()}
-          </p>
-          <p className="report-excerpt">
-            {report.body.substring(0, 150)}...
-          </p>
-          <a href={report.url} target="_blank" rel="noopener noreferrer">
-            Read full report
-          </a>
-        </div>
-      </Popup>
-    </Marker>
-  );
-})}
+          {showVerifiedReports && reliefWebReports.map(report => {
+            if (!report.coordinates) {
+              console.warn('Skipping marker for report without coordinates:', report);
+              return null;
+            }
+            
+            console.log('Rendering report marker:', report);
+            
+            return (
+              <Marker
+                key={`reliefweb-${report.id}`}
+                position={[report.coordinates[1], report.coordinates[0]]}
+                icon={new L.Icon({
+                  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
+                  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                  iconSize: [25, 41],
+                  iconAnchor: [12, 41],
+                  popupAnchor: [1, -34]
+                })}
+              >
+                <Popup>
+                  <div className="verified-report-popup">
+                    <h3>Verified Report: {report.title}</h3>
+                    <p className="report-meta">
+                      {report.type} • {report.country} • {new Date(report.date).toLocaleDateString()}
+                    </p>
+                    <p className="report-excerpt">
+                      {report.body.substring(0, 150)}...
+                    </p>
+                    <a href={report.url} target="_blank" rel="noopener noreferrer">
+                      Read full report
+                    </a>
+                  </div>
+                </Popup>
+              </Marker>
+            );
+          })}
         </MapContainer>
       </div>    
        
       <div className="map-controls">
-      <button className="btn emergency">
-  SOS Emergency
-</button>
+        <button className="btn emergency" onClick={handleSOSClick}>
+          SOS Emergency
+        </button>
         <button className="btn shelters" onClick={handleNavigateToNearestShelter}>
           Navigate to Nearest Shelter
         </button>
         <button
-  className={`btn ${showVerifiedReports ? 'active' : ''}`}
-  onClick={() => setShowVerifiedReports(!showVerifiedReports)}
->
-  {showVerifiedReports ? 'Hide Verified Reports' : 'Show Verified Reports'}
-</button>
+          className={`btn ${showVerifiedReports ? 'active' : ''}`}
+          onClick={() => setShowVerifiedReports(!showVerifiedReports)}
+        >
+          {showVerifiedReports ? 'Hide Verified Reports' : 'Show Verified Reports'}
+        </button>
       </div>
     </div>
   );

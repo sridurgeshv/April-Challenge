@@ -29,7 +29,15 @@ const EmergencyContactSchema = new mongoose.Schema({
   date: {
     type: Date,
     default: Date.now
-  }
+  },
+  uniqueCode: {
+    type: String,
+    required: false
+  },
+  telegramChatId: {
+    type: String,
+    required: false
+  },
 });
 
 module.exports = mongoose.model('EmergencyContact', EmergencyContactSchema);
