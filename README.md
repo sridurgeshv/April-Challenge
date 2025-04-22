@@ -129,16 +129,6 @@ Add these keys to your `.env` files in both frontend and backend folders.
 - Phone Number: 6789065432
 - OTP: 890765
 
-## Project Roadmap
-
-- [x] Initial project setup
-- [x] Basic map implementation
-- [x] NASA EONET API integration
-- [x] Safe route algorithm
-- [ ] UI/UX development
-- [ ] Testing and performance optimization
-- [ ] Documentation and deployment
-
 ## 👥 Contributing
 
 We welcome community contributions to make SafeRoute more effective in emergency situations. To contribute:

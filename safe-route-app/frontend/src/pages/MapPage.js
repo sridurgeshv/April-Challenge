@@ -4,6 +4,8 @@ import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
 import axios from 'axios';
+import { auth } from '../firebase'; 
+import { signOut } from 'firebase/auth';
 import { fetchDisasters } from '../services/disasterService';
 import { getCurrentLocation } from '../services/locationService';
 import { fetchReliefWebReports } from '../services/reliefWebService';
@@ -135,8 +137,17 @@ const MapPage = () => {
     window.location.href = '/profile';
   };
   
-  const handleLogoutClick = () => {
-    window.location.href = '/';
+  const handleLogoutClick = async () => {
+    try {      
+      // Sign out the user from Firebase
+      await signOut(auth);
+      
+      // After successful logout, redirect to welcome page
+      window.location.href = '/';
+    } catch (error) {
+      console.error("Logout failed:", error);
+      alert("Failed to log out. Please try again.");
+    }
   };
 
   const getDisasterIcon = (category, isRecent) => {
