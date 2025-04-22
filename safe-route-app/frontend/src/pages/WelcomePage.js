@@ -8,7 +8,7 @@ import { useAuth } from '../contexts/AuthContext';
 import ambulanceGif from '../assets/ambulance.gif';
 import fireVehicleGif from '../assets/firetruck.gif';
 import alertBoardGif from '../assets/alert.gif';
-import phoneMapGif from '../assets/map.gif';
+import phoneMapGif from '../assets/maps.gif';
 
 const WelcomePage = () => {
   const [showRegister, setShowRegister] = useState(false);
