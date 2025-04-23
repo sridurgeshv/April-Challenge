@@ -8,11 +8,14 @@
 
 During natural disasters, timely information and clear evacuation guidance can mean the difference between life and death. SafeRoute addresses this critical need by providing an all-in-one solution that helps users:
 
-- Access real-time disaster information specific to their location
-- Find the safest evacuation routes away from danger
-- Locate nearby emergency shelters and critical services
+- Automatic location detection.
+- Can check global disasters happening or happened all around the world as well as can also check if your in a safe zone in the map itself.
+- Live alerts on natural disasters from reliable data sources
+- Discovery of nearby shelters, hospitals, and emergency facilities
+- Navigation through the nearest available shelters
+- SOS message to emergency contact added by user via telegram.
 - Connect with local emergency services through region-specific contact information
-
+- PreparednessTips especially curated for users.
 ---
 
 ## 🧭 Solution Overview
@@ -24,19 +27,12 @@ SafeRoute utilizes real-time geospatial data and global disaster feeds to help u
 ## 🚀 Key Features
 
 - 🔴 **Live Disaster Alerts**: Integration with trusted global sources for timely notifications about earthquakes, floods, wildfires, and other natural disasters.
-  
-- 🧭 **Safe Navigation**: AI-powered routing algorithm that suggests optimal evacuation paths while avoiding hazardous areas.
 
-- 🛑 **Shelter & Resource Locator**: Instantly identifies nearby shelters, medical facilities, and aid centers when you need them most.
+- 🛑 **Shelter & Resource Locator**: Identifies nearby shelters, medical facilities, and aid centers and navigation through the nearest available shelter.
 
 - 📞 **Localized Emergency Contacts**: Our standout feature — SafeRoute detects the user's region and dynamically presents localized emergency numbers (police, fire, ambulance). Whether in India, the U.S., or elsewhere, users receive accurate, region-specific contact details.
 
-- 📡 **Offline Functionality**: Critical features remain available even during connectivity disruptions through local data caching.
-
-- 📢 **Community Reports**: Users can flag danger zones or request help, creating a collaborative safety network visible to other users and authorities.
-
-- 🔔 **Personalized Alerts**: Set up custom notifications based on specific disaster types or proximity thresholds.
-
+- 🔴  **SOS Message** : Can send sos message to your emergency contacts via telegram.
 ---
 
 ## 📱 User Interface & Experience
@@ -46,7 +42,6 @@ SafeRoute utilizes real-time geospatial data and global disaster feeds to help u
 SafeRoute features an intuitive, panic-friendly interface designed to be used under stress:
 - Large, clear buttons for critical functions
 - High-contrast color scheme for visibility in various lighting conditions
-- Voice commands for hands-free operation
 - Minimal screen transitions to access vital information
 
 ---
@@ -61,23 +56,17 @@ SafeRoute features an intuitive, panic-friendly interface designed to be used un
 ### Backend
 - **Node.js** with **Express** - Handling server-side operations and API integrations
 - **MongoDB** - Storing user data, location information, and shelter databases
-- **Redis** - Caching disaster data for rapid access and offline functionality
-- **Socket.io** - Enabling real-time updates and notifications
-
 ---
 
 ## 🔌 API Integrations
 
 | API | Purpose | Implementation Details |
 |-----|---------|------------------------|
-| [NASA EONET](https://eonet.gsfc.nasa.gov/docs/v2.1) | Real-time natural event tracking | Polls every 5 minutes for updated disaster data |
-| [NASA Earth API](https://api.nasa.gov/) | Satellite imagery | Used for visual confirmation of affected areas |
+| [NASA EONET](https://eonet.gsfc.nasa.gov/docs/v3) | Real-time natural event tracking | Polls every 5 minutes for updated disaster data |
+| [Gdacs API](https://gdacs.org/) | Real-time access to web‐based disaster information| For live disaster alerts |
 | [OpenStreetMap](https://wiki.openstreetmap.org/wiki/API_v0.6) | Geolocation and navigation | Primary mapping service for route calculation |
 | [ReliefWeb API](https://reliefweb.int/help/api) | Humanitarian response data | Shelter and aid location data source |
-| [Google Places API](https://developers.google.com/maps/documentation/places/web-service/overview) | Emergency services & hospitals | Identifies medical facilities within safe reach |
-| [Photon](https://photon.komoot.io/) | Geocoding | Converts addresses to coordinates and vice versa |
-| [HERE Maps API](https://www.here.com/developer/rest-apis) | Map services and routing | Secondary routing provider with traffic data |
-| [Regional Emergency Directory API](https://example.com) | Country-specific emergency contacts | Custom implementation that maps user location to appropriate emergency numbers |
+| [Emergency Number API](https://emergencynumberapi.com/) | Emergency numbers | For fetching emergency numbers according to the user location |
 
 ---
 
@@ -87,15 +76,19 @@ SafeRoute features an intuitive, panic-friendly interface designed to be used un
 
 - Node.js (v16+)
 - npm or yarn
-- MongoDB (local or Atlas connection)
-- API keys (see [API Registration](#api-registration))
+- MongoDB ( Atlas connection)
+
+ ## Test Credentials (for OTP module)
+
+- Phone Number: 6789065432
+- OTP: 890765
 
 ### Installation Steps
 
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/safe-route-app.git
+   git clone https://github.com/sridurgeshv/April-Challenge.git
    cd safe-route-app
    ```
 
@@ -110,25 +103,8 @@ SafeRoute features an intuitive, panic-friendly interface designed to be used un
    ```bash
    cd backend
    npm install
-   cp .env
    node server.js
    ```
-
-### API Registration
-
-To run this application, obtain API keys from the following services:
-1. NASA API - [Register](https://api.nasa.gov/)
-2. Google Places API - [Register](https://developers.google.com/maps/documentation/places/web-service/overview)
-3. HERE Maps API - [Register](https://www.here.com/develop/rest-apis)
-4. MapBox (optional) - [Register](https://www.mapbox.com/)
-
-Add these keys to your `.env` files in both frontend and backend folders.
-
-## Test Credentials (for OTP module)
-
-- Phone Number: 6789065432
-- OTP: 890765
-
 ## 👥 Contributing
 
 We welcome community contributions to make SafeRoute more effective in emergency situations. To contribute:
@@ -158,6 +134,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 For questions or feedback, reach out to:
 - Email: ritikasrivastava456@gmail.com, sridurgeshv@gmail.com
 - GitHub Issues: [Report a bug](https://github.com/sridurgeshv/safe-route-app/issues)
+
+## Discord Handles
+
+@ritika12 @sunnyunam
+
 
 
 
