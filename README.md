@@ -65,7 +65,7 @@ SafeRoute features an intuitive, panic-friendly interface designed to be used un
 | [NASA EONET](https://eonet.gsfc.nasa.gov/docs/v3) | Real-time natural event tracking | Polls every 5 minutes for updated disaster data |
 | [Gdacs API](https://gdacs.org/) | Real-time access to web‐based disaster information| For live disaster alerts |
 | [OpenStreetMap](https://wiki.openstreetmap.org/wiki/API_v0.6) | Geolocation and navigation | Primary mapping service for route calculation |
-| [ReliefWeb API](https://reliefweb.int/help/api) | Humanitarian response data | Shelter and aid location data source |
+| [ReliefWeb API](https://reliefweb.int/help/api) | Humanitarian response data | Get real time report related to any natural disasters |
 | [Emergency Number API](https://emergencynumberapi.com/) | Emergency numbers | For fetching emergency numbers according to the user location |
 
 ---
