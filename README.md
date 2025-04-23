@@ -6,7 +6,7 @@
 
 ## 🌟 Problem Statement
 
-During natural disasters, timely information and clear evacuation guidance can mean the difference between life and death. SafeRoute addresses this critical need by providing an all-in-one solution that helps users:
+During natural disasters, timely information and clear evacuation guidance can mean the difference between life and death. SafeRoute addresses this critical need by providing an all-in-one solution. The key features include:
 
 - Automatic location detection.
 - Can check global disasters happening or happened all around the world as well as can also check if your in a safe zone in the map itself.
